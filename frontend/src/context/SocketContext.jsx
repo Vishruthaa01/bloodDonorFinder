@@ -31,7 +31,7 @@ export const SocketProvider = ({ children }) => {
       return;
     }
 
-    const socketUrl = 'http://localhost:5000';
+    const socketUrl = 'http://127.0.0.1:5000';
     const newSocket = io(socketUrl);
 
     newSocket.on('connect', () => {

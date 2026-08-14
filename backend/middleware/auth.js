@@ -10,12 +10,13 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      if (decoded.role === 'donor') {
+      const cleanRole = decoded.role.toLowerCase();
+      if (cleanRole === 'donor') {
         req.user = await User.findById(decoded.id).select('-passwordHash');
         if (!req.user) {
           return res.status(401).json({ message: 'Donor not found, authorization failed' });
         }
-      } else if (decoded.role === 'hospital') {
+      } else if (cleanRole === 'hospital') {
         req.user = await Hospital.findById(decoded.id).select('-passwordHash');
         if (!req.user) {
           return res.status(401).json({ message: 'Hospital not found, authorization failed' });
@@ -24,7 +25,7 @@ const protect = async (req, res, next) => {
         return res.status(401).json({ message: 'Invalid role in token' });
       }
 
-      req.userRole = decoded.role;
+      req.userRole = cleanRole;
       next();
     } catch (error) {
       console.error(error);

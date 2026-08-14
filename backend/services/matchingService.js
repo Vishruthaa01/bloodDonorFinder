@@ -47,7 +47,43 @@ const matchAndNotifyNextDonor = async (requestId) => {
     }).limit(1);
 
     if (nearbyDonors.length === 0) {
+      const maxRadius = 30;
+      if (request.radiusKm < maxRadius) {
+        const nextRadius = Math.min(request.radiusKm + 5, maxRadius);
+        request.radiusKm = nextRadius;
+        request.statusHistory.push({
+          status: 'searching',
+          note: `No donors found in initial radius. Expanding search radius to ${nextRadius} km.`
+        });
+        await request.save();
+
+        console.log(`Expanding search radius to ${nextRadius} km for request ${requestId}...`);
+
+        notifyService.notifyHospital(request.hospitalId._id.toString(), {
+          type: 'REQUEST_UPDATED',
+          requestId: request._id,
+          status: request.status,
+          message: `Expanding search radius to ${nextRadius} km.`
+        });
+
+        return matchAndNotifyNextDonor(requestId);
+      }
+
       console.log(`No more compatible donors found near hospital for request ${requestId}`);
+      
+      request.statusHistory.push({
+        status: 'searching',
+        note: 'Matching engine: No compatible available donors found within 30 km maximum range.'
+      });
+      await request.save();
+
+      notifyService.notifyHospital(request.hospitalId._id.toString(), {
+        type: 'REQUEST_UPDATED',
+        requestId: request._id,
+        status: request.status,
+        message: 'No compatible donors found within maximum range.'
+      });
+
       return { success: false, message: 'No more donors found' };
     }
 
@@ -74,13 +110,14 @@ const matchAndNotifyNextDonor = async (requestId) => {
       notificationId: notification._id,
       requestId: request._id,
       hospitalName: request.hospitalId.name,
+      hospitalCoords: hospitalCoords,
       bloodGroup: request.bloodGroup,
       unitsNeeded: request.unitsNeeded,
       urgency: request.urgency,
       message: notificationMsg
     });
 
-    // Timeout: 3 minutes (180000ms) to auto-reject if donor doesn't respond
+    // Timeout: 45 seconds (45000ms) to auto-reject for easier development testing
     setTimeout(async () => {
       try {
         const freshRequest = await BloodRequest.findById(requestId);
@@ -100,20 +137,18 @@ const matchAndNotifyNextDonor = async (requestId) => {
 
           console.log(`Donor ${nextDonor.name} timed out. Attempting next donor...`);
           
-          // Notify hospital about update
           notifyService.notifyHospital(freshRequest.hospitalId.toString(), {
             type: 'REQUEST_UPDATED',
             requestId: freshRequest._id,
             status: freshRequest.status
           });
 
-          // Match next
           await matchAndNotifyNextDonor(requestId);
         }
       } catch (err) {
         console.error('Error in timeout job:', err);
       }
-    }, 180000);
+    }, 45000);
 
     return { success: true, donor: nextDonor };
   } catch (error) {

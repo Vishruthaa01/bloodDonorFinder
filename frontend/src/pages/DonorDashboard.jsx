@@ -1,17 +1,31 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { SocketContext } from '../context/SocketContext';
-import { Heart, Check, X } from 'lucide-react';
+import { Heart, Check, X, Award, Printer } from 'lucide-react';
+import { MapView } from '../components/MapView';
 
 export const DonorDashboard = () => {
   const { user, token, API_URL, updateAvailability } = useContext(AuthContext);
   const { incomingRequest, setIncomingRequest, addToast } = useContext(SocketContext);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCert, setSelectedCert] = useState(null);
+
+  const getEligibilityDaysRemaining = () => {
+    if (!user.lastDonationDate) return 0;
+    const lastDonation = new Date(user.lastDonationDate);
+    const today = new Date();
+    const diffTime = Math.abs(today - lastDonation);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays < 90 ? 90 - diffDays : 0;
+  };
+
+  const daysRemaining = getEligibilityDaysRemaining();
+  const isEligible = daysRemaining === 0;
 
   useEffect(() => {
     fetchHistory();
-  }, [incomingRequest]);
+  }, []);
 
   const fetchHistory = async () => {
     try {
@@ -21,6 +35,20 @@ export const DonorDashboard = () => {
       if (res.ok) {
         const data = await res.json();
         setHistory(data);
+
+        // Automatically load pending request if any exists in DB history (only if not already set)
+        const activeMatch = data.find(req => req.status === 'searching' && req.response === 'pending');
+        if (activeMatch) {
+          setIncomingRequest(prev => prev || {
+            requestId: activeMatch._id,
+            hospitalName: activeMatch.hospital?.name || 'Hospital',
+            hospitalCoords: activeMatch.hospital?.location?.coordinates,
+            bloodGroup: activeMatch.bloodGroup,
+            unitsNeeded: activeMatch.unitsNeeded,
+            urgency: activeMatch.urgency,
+            message: `Urgent: Blood request for ${activeMatch.bloodGroup} at ${activeMatch.hospital?.name || 'Hospital'}.`
+          });
+        }
       }
     } catch (err) {
       console.error('Error fetching history:', err);
@@ -80,7 +108,7 @@ export const DonorDashboard = () => {
       </div>
 
       {incomingRequest && (
-        <div className="card" style={{ borderLeft: '6px solid var(--primary)', animation: 'pulse 3s infinite' }}>
+        <div className="card" style={{ borderLeft: '6px solid var(--primary)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
             <div>
               <span className="badge badge-urgency-critical" style={{ marginBottom: '10px' }}>
@@ -89,14 +117,25 @@ export const DonorDashboard = () => {
               <h3 style={{ fontSize: '1.4rem', color: 'var(--primary)' }}>
                 Urgent Blood Match Required ({incomingRequest.bloodGroup})
               </h3>
-              <p style={{ marginTop: '8px' }}>
+              <p style={{ marginTop: '8px', marginBottom: 0 }}>
                 <strong>Hospital:</strong> {incomingRequest.hospitalName} <br />
                 <strong>Units Needed:</strong> {incomingRequest.unitsNeeded} units <br />
                 {incomingRequest.message}
               </p>
+              
+              {!isEligible && (
+                <div className="alert alert-error" style={{ marginTop: '16px', marginBottom: 0, padding: '10px 14px' }}>
+                  <span>⚠️ <b>Medical Ineligibility Alert:</b> You cannot accept this request. Your last donation was on <b>{new Date(user.lastDonationDate).toLocaleDateString()}</b>. You must wait another <b>{daysRemaining} day(s)</b> to complete the standard 90-day recovery interval. Please decline this request to route it to the next candidate.</span>
+                </div>
+              )}
             </div>
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button className="btn btn-primary" onClick={() => handleResponse(incomingRequest.requestId, 'accepted')}>
+              <button 
+                className={`btn ${isEligible ? 'btn-primary' : 'btn-disabled'}`} 
+                onClick={() => isEligible && handleResponse(incomingRequest.requestId, 'accepted')}
+                disabled={!isEligible}
+                title={!isEligible ? `Ineligible to donate for another ${daysRemaining} days` : 'Accept match request'}
+              >
                 <Check size={18} />
                 <span>Accept</span>
               </button>
@@ -106,6 +145,19 @@ export const DonorDashboard = () => {
               </button>
             </div>
           </div>
+
+          {/* Map view showing hospital location and donor's own location */}
+          {incomingRequest.hospitalCoords && user.location?.coordinates && (
+            <div style={{ marginTop: '10px' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px', color: 'var(--text-secondary)' }}>
+                Routing Map:
+              </div>
+              <MapView
+                hospitalCoords={incomingRequest.hospitalCoords}
+                donorCoords={user.location.coordinates}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -134,6 +186,7 @@ export const DonorDashboard = () => {
                   <th style={{ padding: '12px' }}>My Response</th>
                   <th style={{ padding: '12px' }}>Eligibility</th>
                   <th style={{ padding: '12px' }}>Request Status</th>
+                  <th style={{ padding: '12px' }}>Certificate</th>
                 </tr>
               </thead>
               <tbody>
@@ -158,8 +211,22 @@ export const DonorDashboard = () => {
                         {req.eligibility}
                       </span>
                     </td>
-                    <td style={{ padding: '12px' }}>
+                     <td style={{ padding: '12px' }}>
                       <span className={`badge badge-${req.status}`}>{req.status}</span>
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      {req.status === 'completed' && req.response === 'accepted' && req.eligibility === 'eligible' ? (
+                        <button
+                          className="btn btn-outline btn-sm"
+                          onClick={() => setSelectedCert(req)}
+                          style={{ padding: '4px 8px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+                        >
+                          <Award size={12} />
+                          <span>Generate</span>
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>—</span>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -168,6 +235,55 @@ export const DonorDashboard = () => {
           </div>
         )}
       </div>
+
+      {selectedCert && (
+        <div className="modal-overlay" style={{ padding: '16px' }}>
+          <div className="modal-content" style={{ maxWidth: '650px', padding: '32px', border: '8px double var(--primary-light)', position: 'relative' }}>
+            <div style={{ border: '2px solid var(--primary)', padding: '24px', textAlign: 'center' }}>
+              <Heart size={44} fill="var(--primary)" color="var(--primary)" style={{ marginBottom: '12px' }} />
+              <h2 style={{ fontFamily: 'Georgia, serif', color: 'var(--text-primary)', fontSize: '1.8rem', marginBottom: '4px' }}>
+                Certificate of Appreciation
+              </h2>
+              <p style={{ fontStyle: 'italic', color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px' }}>
+                Presented to a life saver
+              </p>
+              
+              <h3 style={{ fontSize: '1.6rem', color: 'var(--primary)', marginBottom: '12px' }}>
+                {user.name}
+              </h3>
+              
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.5', maxWidth: '480px', margin: '0 auto 20px auto' }}>
+                For voluntarily donating <b>{selectedCert.unitsNeeded} unit(s)</b> of <b>{selectedCert.bloodGroup}</b> blood to <b>{selectedCert.hospital?.name}</b> on {new Date(selectedCert.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}. Your selfless contribution has helped save lives.
+              </p>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', padding: '0 10px' }}>
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ borderBottom: '1px solid var(--text-muted)', width: '130px', height: '24px' }}></div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>Medical Director</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--text-muted)' }}>
+                    CERTIFICATE ID
+                  </div>
+                  <code style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>
+                    LSC-{selectedCert._id.substring(18).toUpperCase()}
+                  </code>
+                </div>
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'end', marginTop: '20px' }}>
+              <button className="btn btn-secondary btn-sm" onClick={() => setSelectedCert(null)}>
+                Close
+              </button>
+              <button className="btn btn-primary btn-sm" onClick={() => window.print()}>
+                <Printer size={14} />
+                <span>Print / Save PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

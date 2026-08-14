@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [selectedRequestId, setSelectedRequestId] = useState(null);
 
-  const API_URL = 'http://localhost:5000/api';
+  const API_URL = 'http://127.0.0.1:5000/api';
 
   useEffect(() => {
     const loadUser = async () => {

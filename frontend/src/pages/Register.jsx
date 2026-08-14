@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { MapPin } from 'lucide-react';
+import { RegisterMap } from '../components/RegisterMap';
 
 export const Register = ({ registerType }) => {
   const { registerDonor, registerHospital, setPage } = useContext(AuthContext);
@@ -274,7 +275,20 @@ export const Register = ({ registerType }) => {
                 {locating ? 'Locating...' : 'Refresh GPS'}
               </button>
             </div>
-            <div className="form-row">
+
+            <RegisterMap
+              latitude={formData.latitude}
+              longitude={formData.longitude}
+              onChange={(lat, lng) => {
+                setFormData(prev => ({
+                  ...prev,
+                  latitude: lat,
+                  longitude: lng
+                }));
+              }}
+            />
+
+            <div className="form-row" style={{ marginTop: '16px' }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
                 <label className="form-label" style={{ fontSize: '0.8rem' }}>Longitude (X-axis)</label>
                 <input

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { SocketContext } from '../context/SocketContext';
 import { ArrowLeft, User, Phone, Check, X, Clock, MapPin, CheckCircle, HelpCircle } from 'lucide-react';
+import { MapView } from '../components/MapView';
 
 export const RequestTracking = () => {
   const { token, API_URL, selectedRequestId, setPage } = useContext(AuthContext);
@@ -127,6 +128,18 @@ export const RequestTracking = () => {
           })}
         </div>
       </div>
+
+      {/* Live Map View */}
+      {request.hospitalId?.location?.coordinates && (
+        <div className="card" style={{ padding: '16px' }}>
+          <h3 style={{ marginBottom: '12px' }}>Live Matching Map</h3>
+          <MapView
+            hospitalCoords={request.hospitalId.location.coordinates}
+            donorCoords={request.acceptedDonorId?.location?.coordinates}
+            radiusKm={request.radiusKm}
+          />
+        </div>
+      )}
 
       {/* Active Phase Controls */}
       <div className="card" style={{ borderLeft: '4px solid var(--primary)' }}>

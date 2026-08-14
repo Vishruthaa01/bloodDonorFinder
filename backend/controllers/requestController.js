@@ -128,6 +128,20 @@ exports.respondToRequest = async (req, res) => {
     donorMatch.response = response;
 
     if (response === 'accepted') {
+      if (req.user.lastDonationDate) {
+        const lastDonation = new Date(req.user.lastDonationDate);
+        const today = new Date();
+        const diffTime = Math.abs(today - lastDonation);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays < 90) {
+          const daysRemaining = 90 - diffDays;
+          return res.status(400).json({ 
+            message: `You are not eligible to donate yet. Please wait another ${daysRemaining} day(s) to complete the 90-day recovery period.` 
+          });
+        }
+      }
+
       request.status = 'donor_found';
       request.acceptedDonorId = req.user._id;
       request.statusHistory.push({

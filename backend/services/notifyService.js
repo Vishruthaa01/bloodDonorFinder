@@ -15,10 +15,11 @@ const init = (socketIoInstance) => {
       socket.userId = userId;
       socket.role = role;
 
-      if (role === 'donor') {
+      const cleanRole = role.toLowerCase();
+      if (cleanRole === 'donor') {
         donorSockets.set(userId, socket.id);
         console.log(`Donor ${userId} registered to socket ${socket.id}`);
-      } else if (role === 'hospital') {
+      } else if (cleanRole === 'hospital') {
         hospitalSockets.set(userId, socket.id);
         console.log(`Hospital ${userId} registered to socket ${socket.id}`);
       }
@@ -26,10 +27,11 @@ const init = (socketIoInstance) => {
 
     socket.on('disconnect', () => {
       console.log(`Socket disconnected: ${socket.id}`);
-      if (socket.userId) {
-        if (socket.role === 'donor') {
+      if (socket.userId && socket.role) {
+        const cleanRole = socket.role.toLowerCase();
+        if (cleanRole === 'donor') {
           donorSockets.delete(socket.userId);
-        } else if (socket.role === 'hospital') {
+        } else if (cleanRole === 'hospital') {
           hospitalSockets.delete(socket.userId);
         }
       }
