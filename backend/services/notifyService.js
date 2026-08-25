@@ -12,27 +12,35 @@ const init = (socketIoInstance) => {
       const { userId, role } = data;
       if (!userId || !role) return;
 
-      socket.userId = userId;
+      const uid = userId.toString();
+      socket.userId = uid;
       socket.role = role;
 
       const cleanRole = role.toLowerCase();
       if (cleanRole === 'donor') {
-        donorSockets.set(userId, socket.id);
-        console.log(`Donor ${userId} registered to socket ${socket.id}`);
+        donorSockets.set(uid, socket.id);
+        console.log(`Donor ${uid} registered to socket ${socket.id}`);
       } else if (cleanRole === 'hospital') {
-        hospitalSockets.set(userId, socket.id);
-        console.log(`Hospital ${userId} registered to socket ${socket.id}`);
+        hospitalSockets.set(uid, socket.id);
+        console.log(`Hospital ${uid} registered to socket ${socket.id}`);
       }
     });
 
     socket.on('disconnect', () => {
       console.log(`Socket disconnected: ${socket.id}`);
       if (socket.userId && socket.role) {
+        const uid = socket.userId.toString();
         const cleanRole = socket.role.toLowerCase();
         if (cleanRole === 'donor') {
-          donorSockets.delete(socket.userId);
+          if (donorSockets.get(uid) === socket.id) {
+            donorSockets.delete(uid);
+            console.log(`Donor ${uid} unregistered from socket ${socket.id}`);
+          }
         } else if (cleanRole === 'hospital') {
-          hospitalSockets.delete(socket.userId);
+          if (hospitalSockets.get(uid) === socket.id) {
+            hospitalSockets.delete(uid);
+            console.log(`Hospital ${uid} unregistered from socket ${socket.id}`);
+          }
         }
       }
     });
@@ -40,20 +48,24 @@ const init = (socketIoInstance) => {
 };
 
 const notifyDonor = (donorId, payload) => {
-  const socketId = donorSockets.get(donorId);
+  if (!donorId) return false;
+  const targetId = donorId.toString();
+  const socketId = donorSockets.get(targetId);
   if (socketId && io) {
     io.to(socketId).emit('new_blood_request', payload);
-    console.log(`Emitted new_blood_request to donor ${donorId}`);
+    console.log(`Emitted new_blood_request to donor ${targetId}`);
     return true;
   }
   return false;
 };
 
 const notifyHospital = (hospitalId, payload) => {
-  const socketId = hospitalSockets.get(hospitalId);
+  if (!hospitalId) return false;
+  const targetId = hospitalId.toString();
+  const socketId = hospitalSockets.get(targetId);
   if (socketId && io) {
     io.to(socketId).emit('request_updated', payload);
-    console.log(`Emitted request_updated to hospital ${hospitalId}`);
+    console.log(`Emitted request_updated to hospital ${targetId}`);
     return true;
   }
   return false;

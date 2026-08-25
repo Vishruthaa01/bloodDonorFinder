@@ -74,7 +74,7 @@ exports.getDonorRequests = async (req, res) => {
 
     // Format response to include notification status/time for this donor
     const formatted = requests.map(req => {
-      const match = req.matchedDonors.find(m => m.donorId.toString() === req.params.donorId);
+      const match = req.matchedDonors.find(m => m && m.donorId && m.donorId.toString() === req.params.donorId);
       return {
         _id: req._id,
         hospital: req.hospitalId,
@@ -114,7 +114,7 @@ exports.respondToRequest = async (req, res) => {
     }
 
     const donorMatch = request.matchedDonors.find(
-      m => m.donorId.toString() === req.user._id.toString()
+      m => m && m.donorId && m.donorId.toString() === req.user._id.toString()
     );
 
     if (!donorMatch) {
@@ -205,7 +205,7 @@ exports.checkEligibility = async (req, res) => {
     }
 
     const donorMatch = request.matchedDonors.find(
-      m => m.donorId.toString() === request.acceptedDonorId.toString()
+      m => m && m.donorId && request.acceptedDonorId && m.donorId.toString() === request.acceptedDonorId.toString()
     );
 
     if (donorMatch) {

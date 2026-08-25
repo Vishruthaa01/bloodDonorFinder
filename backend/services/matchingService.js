@@ -26,15 +26,29 @@ const matchAndNotifyNextDonor = async (requestId) => {
       return { success: false, message: `Request is in status: ${request.status}` };
     }
 
+    if (!request.hospitalId || !request.hospitalId.location || !request.hospitalId.location.coordinates) {
+      console.error(`Hospital data missing or invalid for request ${requestId}`);
+      return { success: false, message: 'Hospital data missing' };
+    }
+
     const attemptedDonorIds = request.matchedDonors.map(m => m.donorId);
     const compatibleGroups = getCompatibleBloodGroups(request.bloodGroup);
     const maxDistanceMeters = request.radiusKm * 1000;
     const hospitalCoords = request.hospitalId.location.coordinates;
 
+    const ninetyDaysAgo = new Date();
+    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
     const nearbyDonors = await User.find({
       _id: { $nin: attemptedDonorIds },
+      role: 'donor',
       bloodGroup: { $in: compatibleGroups },
       isAvailable: true,
+      $or: [
+        { lastDonationDate: { $exists: false } },
+        { lastDonationDate: null },
+        { lastDonationDate: { $lte: ninetyDaysAgo } }
+      ],
       location: {
         $nearSphere: {
           $geometry: {

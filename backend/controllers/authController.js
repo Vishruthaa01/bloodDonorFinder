@@ -13,9 +13,19 @@ exports.registerDonor = async (req, res) => {
   try {
     const { name, phone, email, password, bloodGroup, location, age, lastDonationDate } = req.body;
 
-    const userExists = await User.findOne({ email });
+    if (!email || !password || !name || !phone || !bloodGroup || !age) {
+      return res.status(400).json({ message: 'Please provide all required fields' });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const userExists = await User.findOne({ email: normalizedEmail });
     if (userExists) {
       return res.status(400).json({ message: 'Donor with this email already exists' });
+    }
+
+    if (!location || isNaN(parseFloat(location.longitude)) || isNaN(parseFloat(location.latitude))) {
+      return res.status(400).json({ message: 'Valid location coordinates (longitude & latitude) are required' });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -27,9 +37,9 @@ exports.registerDonor = async (req, res) => {
     };
 
     const user = await User.create({
-      name,
-      phone,
-      email,
+      name: name.trim(),
+      phone: phone.trim(),
+      email: normalizedEmail,
       passwordHash,
       bloodGroup,
       location: formattedLocation,
@@ -55,9 +65,20 @@ exports.registerHospital = async (req, res) => {
   try {
     const { name, regId, address, location, contactPerson, phone, email, password } = req.body;
 
-    const hospitalExists = await Hospital.findOne({ $or: [{ email }, { regId }] });
+    if (!email || !password || !name || !regId || !address || !contactPerson || !phone) {
+      return res.status(400).json({ message: 'Please provide all required fields' });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedRegId = regId.trim().toUpperCase();
+
+    const hospitalExists = await Hospital.findOne({ $or: [{ email: normalizedEmail }, { regId: normalizedRegId }] });
     if (hospitalExists) {
       return res.status(400).json({ message: 'Hospital with this email or Reg ID already exists' });
+    }
+
+    if (!location || isNaN(parseFloat(location.longitude)) || isNaN(parseFloat(location.latitude))) {
+      return res.status(400).json({ message: 'Valid location coordinates (longitude & latitude) are required' });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -69,13 +90,13 @@ exports.registerHospital = async (req, res) => {
     };
 
     const hospital = await Hospital.create({
-      name,
-      regId,
-      address,
+      name: name.trim(),
+      regId: normalizedRegId,
+      address: address.trim(),
       location: formattedLocation,
-      contactPerson,
-      phone,
-      email,
+      contactPerson: contactPerson.trim(),
+      phone: phone.trim(),
+      email: normalizedEmail,
       passwordHash,
       role: 'hospital',
       verified: true
@@ -98,11 +119,17 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    let user = await User.findOne({ email });
+    if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ message: 'Please provide email and password' });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    let user = await User.findOne({ email: normalizedEmail });
     let role = 'donor';
 
     if (!user) {
-      user = await Hospital.findOne({ email });
+      user = await Hospital.findOne({ email: normalizedEmail });
       role = 'hospital';
     }
 

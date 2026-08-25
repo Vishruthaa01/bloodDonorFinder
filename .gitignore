@@ -2,20 +2,38 @@
 node_modules/
 **/node_modules/
 
-# Environment Variables
+# Environment Variables & Secrets
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 **/.env
-**/.env.local
+**/.env.*
+!**/.env.example
 
-# Production Builds
+# Database files & Dumps
+*.zip
+*.tar.gz
+*.db
+*.sqlite
+*.sqlite3
+backend/compass-connections.json
+backend/db.zip
+backend/db/
+db/
+dump/
+
+# Production & Build Outputs
 dist/
 build/
+out/
 **/dist/
 **/build/
+
+# Cache & Temporary Files
+.cache/
+.vite/
+*.tsbuildinfo
+.eslintcache
 
 # Logs
 *.log
@@ -25,12 +43,18 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Editor & System Files
+# Editor & IDE Files
 .vscode/
 .idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# OS System Files
 .DS_Store
+.DS_Store?
+._*
 Thumbs.db
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
+ehthumbs.db
+Desktop.ini

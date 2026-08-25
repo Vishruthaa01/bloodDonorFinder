@@ -57,7 +57,7 @@ export const SocketProvider = ({ children }) => {
     return () => {
       newSocket.disconnect();
     };
-  }, [token, user]);
+  }, [token, user?._id]);
 
   return (
     <SocketContext.Provider value={{ socket, toasts, incomingRequest, setIncomingRequest, addToast, removeToast }}>
