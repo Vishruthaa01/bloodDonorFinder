@@ -131,6 +131,8 @@ exports.login = async (req, res) => {
     if (!user) {
       user = await Hospital.findOne({ email: normalizedEmail });
       role = 'hospital';
+    } else {
+      role = user.role || 'donor';
     }
 
     if (!user) {

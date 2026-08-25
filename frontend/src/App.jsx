@@ -7,6 +7,7 @@ import { Register } from './pages/Register';
 import { DonorDashboard } from './pages/DonorDashboard';
 import { HospitalDashboard } from './pages/HospitalDashboard';
 import { RequestTracking } from './pages/RequestTracking';
+import { AdminDashboard } from './pages/AdminDashboard';
 
 function App() {
   const { page, loading } = useContext(AuthContext);
@@ -39,6 +40,8 @@ function App() {
         return <DonorDashboard />;
       case 'hospital-dashboard':
         return <HospitalDashboard />;
+      case 'admin-dashboard':
+        return <AdminDashboard />;
       case 'request-details':
         return <RequestTracking />;
       default:

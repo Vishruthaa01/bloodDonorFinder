@@ -8,7 +8,7 @@ export const Header = () => {
   return (
     <header className="navbar">
       <div className="navbar-inner">
-        <div className="logo" onClick={() => setPage(user ? (user.role === 'donor' ? 'donor-dashboard' : 'hospital-dashboard') : 'landing')}>
+        <div className="logo" onClick={() => setPage(user ? (user.role === 'admin' ? 'admin-dashboard' : (user.role === 'donor' ? 'donor-dashboard' : 'hospital-dashboard')) : 'landing')}>
           <Heart size={28} fill="currentColor" />
           <span>LifeShare</span>
         </div>
@@ -16,7 +16,7 @@ export const Header = () => {
           {user ? (
             <>
               <span className="user-email" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                {user.name} ({user.role === 'donor' ? 'Donor' : 'Hospital'})
+                {user.name} ({user.role === 'admin' ? 'Admin' : (user.role === 'donor' ? 'Donor' : 'Hospital')})
               </span>
               <button className="btn btn-secondary btn-sm" onClick={logout}>
                 <LogOut size={16} />

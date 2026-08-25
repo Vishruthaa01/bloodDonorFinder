@@ -11,10 +11,10 @@ const protect = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       const cleanRole = decoded.role.toLowerCase();
-      if (cleanRole === 'donor') {
+      if (cleanRole === 'donor' || cleanRole === 'admin') {
         req.user = await User.findById(decoded.id).select('-passwordHash');
         if (!req.user) {
-          return res.status(401).json({ message: 'Donor not found, authorization failed' });
+          return res.status(401).json({ message: 'User not found, authorization failed' });
         }
       } else if (cleanRole === 'hospital') {
         req.user = await Hospital.findById(decoded.id).select('-passwordHash');
