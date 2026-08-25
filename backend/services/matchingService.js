@@ -47,6 +47,7 @@ const matchAndNotifyNextDonor = async (requestId) => {
       $or: [
         { lastDonationDate: { $exists: false } },
         { lastDonationDate: null },
+        { lastDonationDate: "" },
         { lastDonationDate: { $lte: ninetyDaysAgo } }
       ],
       location: {
@@ -61,9 +62,9 @@ const matchAndNotifyNextDonor = async (requestId) => {
     }).limit(1);
 
     if (nearbyDonors.length === 0) {
-      const maxRadius = 30;
+      const maxRadius = 100;
       if (request.radiusKm < maxRadius) {
-        const nextRadius = Math.min(request.radiusKm + 5, maxRadius);
+        const nextRadius = Math.min(request.radiusKm + 10, maxRadius);
         request.radiusKm = nextRadius;
         request.statusHistory.push({
           status: 'searching',

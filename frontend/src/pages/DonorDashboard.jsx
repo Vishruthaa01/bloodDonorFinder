@@ -40,10 +40,10 @@ export const DonorDashboard = () => {
         const data = await res.json();
         setHistory(data);
 
-        // Automatically load pending request if any exists in DB history (only if not already set)
+        // Automatically load pending request if any exists in DB history
         const activeMatch = data.find(req => req.status === 'searching' && req.response === 'pending');
         if (activeMatch) {
-          setIncomingRequest(prev => prev || {
+          setIncomingRequest({
             requestId: activeMatch._id,
             hospitalName: activeMatch.hospital?.name || 'Hospital',
             hospitalCoords: activeMatch.hospital?.location?.coordinates,
