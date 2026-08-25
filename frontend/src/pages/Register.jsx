@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { MapPin } from 'lucide-react';
+import { MapPin, Search } from 'lucide-react';
 import { RegisterMap } from '../components/RegisterMap';
 
 export const Register = ({ registerType }) => {
@@ -24,6 +24,10 @@ export const Register = ({ registerType }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [locating, setLocating] = useState(false);
+  const [placeSearch, setPlaceSearch] = useState('');
+  const [searchingPlace, setSearchingPlace] = useState(false);
+  const [placeSuggestions, setPlaceSuggestions] = useState([]);
+  const [selectedPlaceName, setSelectedPlaceName] = useState('');
 
   useEffect(() => {
     // Automatically attempt to fetch geolocation coordinates on load
@@ -61,6 +65,38 @@ export const Register = ({ registerType }) => {
       }));
       setLocating(false);
     }
+  };
+
+  const handleSearchPlace = async (query) => {
+    if (!query || !query.trim()) return;
+    setSearchingPlace(true);
+    setPlaceSuggestions([]);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
+      if (res.ok) {
+        const data = await res.json();
+        setPlaceSuggestions(data);
+        if (data.length === 1) {
+          selectPlace(data[0]);
+        }
+      }
+    } catch (err) {
+      console.error('Error searching place:', err);
+    } finally {
+      setSearchingPlace(false);
+    }
+  };
+
+  const selectPlace = (place) => {
+    const lat = parseFloat(place.lat).toFixed(6);
+    const lng = parseFloat(place.lon).toFixed(6);
+    setFormData(prev => ({
+      ...prev,
+      latitude: lat,
+      longitude: lng
+    }));
+    setSelectedPlaceName(place.display_name);
+    setPlaceSuggestions([]);
   };
 
   const handleChange = (e) => {
@@ -263,7 +299,7 @@ export const Register = ({ registerType }) => {
             <div style={{ display: 'flex', justifyContent: 'between', alignItems: 'center', marginBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '0.9rem' }}>
                 <MapPin size={16} />
-                <span>Geospatial Location Coordinates</span>
+                <span>Geospatial Location</span>
               </div>
               <button
                 type="button"
@@ -272,8 +308,83 @@ export const Register = ({ registerType }) => {
                 disabled={locating}
                 style={{ marginLeft: 'auto' }}
               >
-                {locating ? 'Locating...' : 'Refresh GPS'}
+                {locating ? 'Locating...' : 'Use My GPS'}
               </button>
+            </div>
+
+            {/* Place / City / Address Search Input */}
+            <div style={{ marginBottom: '16px', position: 'relative' }}>
+              <label className="form-label" style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+                Search Place / City / Area Name
+              </label>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter place name (e.g. Perundurai, Salem, Erode, Chennai)"
+                  value={placeSearch}
+                  onChange={(e) => setPlaceSearch(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleSearchPlace(placeSearch);
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  onClick={() => handleSearchPlace(placeSearch)}
+                  disabled={searchingPlace}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+                >
+                  <Search size={14} />
+                  <span>{searchingPlace ? 'Searching...' : 'Find Place'}</span>
+                </button>
+              </div>
+
+              {/* Suggestions Dropdown */}
+              {placeSuggestions.length > 0 && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  zIndex: 100,
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: 'var(--radius-sm)',
+                  boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
+                  maxHeight: '220px',
+                  overflowY: 'auto',
+                  marginTop: '4px'
+                }}>
+                  {placeSuggestions.map((place, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => selectPlace(place)}
+                      style={{
+                        padding: '10px 14px',
+                        cursor: 'pointer',
+                        fontSize: '0.85rem',
+                        borderBottom: idx < placeSuggestions.length - 1 ? '1px solid var(--border-color)' : 'none',
+                        transition: 'background 0.15s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--secondary)'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    >
+                      <MapPin size={12} style={{ marginRight: '6px', color: 'var(--primary)' }} />
+                      <span>{place.display_name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {selectedPlaceName && (
+                <div style={{ marginTop: '8px', fontSize: '0.8rem', color: 'var(--success)', fontWeight: 600 }}>
+                  📍 Selected: {selectedPlaceName}
+                </div>
+              )}
             </div>
 
             <RegisterMap
@@ -290,7 +401,7 @@ export const Register = ({ registerType }) => {
 
             <div className="form-row" style={{ marginTop: '16px' }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label" style={{ fontSize: '0.8rem' }}>Longitude (X-axis)</label>
+                <label className="form-label" style={{ fontSize: '0.8rem' }}>Longitude (Auto-set on place search / map click)</label>
                 <input
                   type="number"
                   step="any"
@@ -302,7 +413,7 @@ export const Register = ({ registerType }) => {
                 />
               </div>
               <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label" style={{ fontSize: '0.8rem' }}>Latitude (Y-axis)</label>
+                <label className="form-label" style={{ fontSize: '0.8rem' }}>Latitude (Auto-set on place search / map click)</label>
                 <input
                   type="number"
                   step="any"
@@ -315,7 +426,7 @@ export const Register = ({ registerType }) => {
               </div>
             </div>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '8px', marginBottom: 0 }}>
-              * Coordinates are required to match hospitals with nearby donors. Feel free to customize these numbers to simulate different test distances.
+              * Coordinates update automatically when you enter a place name above, click the map, or drag the location pin.
             </p>
           </div>
 
