@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { SocketContext } from '../context/SocketContext';
 import { Heart, Check, X, Award, Printer } from 'lucide-react';
 import { MapView } from '../components/MapView';
+import { DonorEligibilityModal } from '../components/DonorEligibilityModal';
 
 export const DonorDashboard = () => {
   const { user, token, API_URL, updateAvailability } = useContext(AuthContext);
@@ -10,6 +11,7 @@ export const DonorDashboard = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCert, setSelectedCert] = useState(null);
+  const [showEligibilityModal, setShowEligibilityModal] = useState(false);
 
   const getEligibilityDaysRemaining = () => {
     if (!user.lastDonationDate) return 0;
@@ -132,7 +134,7 @@ export const DonorDashboard = () => {
             <div style={{ display: 'flex', gap: '10px' }}>
               <button 
                 className={`btn ${isEligible ? 'btn-primary' : 'btn-disabled'}`} 
-                onClick={() => isEligible && handleResponse(incomingRequest.requestId, 'accepted')}
+                onClick={() => isEligible && setShowEligibilityModal(true)}
                 disabled={!isEligible}
                 title={!isEligible ? `Ineligible to donate for another ${daysRemaining} days` : 'Accept match request'}
               >
@@ -283,6 +285,19 @@ export const DonorDashboard = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {showEligibilityModal && incomingRequest && (
+        <DonorEligibilityModal
+          request={incomingRequest}
+          onConfirm={() => {
+            setShowEligibilityModal(false);
+            handleResponse(incomingRequest.requestId, 'accepted');
+          }}
+          onCancel={() => {
+            setShowEligibilityModal(false);
+          }}
+        />
       )}
     </div>
   );
