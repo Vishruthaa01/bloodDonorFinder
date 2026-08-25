@@ -26,8 +26,10 @@ export const DonorDashboard = () => {
   const isEligible = daysRemaining === 0;
 
   useEffect(() => {
-    fetchHistory();
-  }, []);
+    if (user?._id) {
+      fetchHistory();
+    }
+  }, [user?._id]);
 
   const fetchHistory = async () => {
     try {
@@ -84,6 +86,10 @@ export const DonorDashboard = () => {
     }
   };
 
+  const completedDonationsCount = history.filter(h => h.status === 'completed' && h.response === 'accepted').length;
+  const acceptedRequestsCount = history.filter(h => h.response === 'accepted').length;
+  const livesSavedCount = completedDonationsCount * 3;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
       <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -106,6 +112,51 @@ export const DonorDashboard = () => {
           <span style={{ fontWeight: 700, color: user.isAvailable ? 'var(--success)' : 'var(--text-secondary)' }}>
             {user.isAvailable ? 'AVAILABLE' : 'OFFLINE'}
           </span>
+        </div>
+      </div>
+
+      {/* Donation History Overview Summary Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+        <div className="card" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '14px', borderLeft: '4px solid var(--primary)' }}>
+          <div style={{ backgroundColor: '#fff0f3', padding: '12px', borderRadius: '50%', color: 'var(--primary)' }}>
+            <Heart size={24} fill="var(--primary)" />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Completed Donations</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)' }}>{completedDonationsCount}</div>
+          </div>
+        </div>
+
+        <div className="card" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '14px', borderLeft: '4px solid var(--success)' }}>
+          <div style={{ backgroundColor: '#f0fff4', padding: '12px', borderRadius: '50%', color: 'var(--success)' }}>
+            <Award size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Estimated Lives Saved</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--success)' }}>{livesSavedCount}</div>
+          </div>
+        </div>
+
+        <div className="card" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '14px', borderLeft: '4px solid #3b82f6' }}>
+          <div style={{ backgroundColor: '#eff6ff', padding: '12px', borderRadius: '50%', color: '#3b82f6' }}>
+            <Check size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Accepted Matches</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#3b82f6' }}>{acceptedRequestsCount}</div>
+          </div>
+        </div>
+
+        <div className="card" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: '14px', borderLeft: '4px solid #8b5cf6' }}>
+          <div style={{ backgroundColor: '#f5f3ff', padding: '12px', borderRadius: '50%', color: '#8b5cf6' }}>
+            <Printer size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Donation Status</div>
+            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: isEligible ? 'var(--success)' : 'var(--danger)' }}>
+              {isEligible ? 'Eligible Today' : `${daysRemaining} Days Cooldown`}
+            </div>
+          </div>
         </div>
       </div>
 

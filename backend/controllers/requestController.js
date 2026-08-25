@@ -65,16 +65,19 @@ exports.getHospitalRequests = async (req, res) => {
 
 exports.getDonorRequests = async (req, res) => {
   try {
-    // Find requests where the donor has been matched
+    const donorId = req.params.donorId;
     const requests = await BloodRequest.find({
-      'matchedDonors.donorId': req.params.donorId
+      $or: [
+        { 'matchedDonors.donorId': donorId },
+        { acceptedDonorId: donorId }
+      ]
     })
       .populate('hospitalId', '-passwordHash')
       .sort({ createdAt: -1 });
 
-    // Format response to include notification status/time for this donor
     const formatted = requests.map(req => {
-      const match = req.matchedDonors.find(m => m && m.donorId && m.donorId.toString() === req.params.donorId);
+      const match = req.matchedDonors.find(m => m && m.donorId && m.donorId.toString() === donorId.toString());
+      const isAcceptedDonor = req.acceptedDonorId && req.acceptedDonorId.toString() === donorId.toString();
       return {
         _id: req._id,
         hospital: req.hospitalId,
@@ -83,9 +86,9 @@ exports.getDonorRequests = async (req, res) => {
         urgency: req.urgency,
         status: req.status,
         acceptedDonorId: req.acceptedDonorId,
-        response: match ? match.response : 'pending',
-        eligibility: match ? match.eligibility : 'pending',
-        notifiedAt: match ? match.notifiedAt : null,
+        response: match ? match.response : (isAcceptedDonor ? 'accepted' : 'pending'),
+        eligibility: match ? match.eligibility : (isAcceptedDonor ? 'eligible' : 'pending'),
+        notifiedAt: match ? match.notifiedAt : req.createdAt,
         createdAt: req.createdAt
       };
     });
