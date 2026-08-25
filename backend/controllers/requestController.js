@@ -76,8 +76,8 @@ exports.getDonorRequests = async (req, res) => {
       .sort({ createdAt: -1 });
 
     const formatted = requests.map(req => {
-      const match = req.matchedDonors.find(m => m && m.donorId && m.donorId.toString() === donorId.toString());
-      const isAcceptedDonor = req.acceptedDonorId && req.acceptedDonorId.toString() === donorId.toString();
+      const match = req.matchedDonors.find(m => m && m.donorId && (m.donorId._id || m.donorId).toString() === donorId.toString());
+      const isAcceptedDonor = req.acceptedDonorId && (req.acceptedDonorId._id || req.acceptedDonorId).toString() === donorId.toString();
       return {
         _id: req._id,
         hospital: req.hospitalId,
