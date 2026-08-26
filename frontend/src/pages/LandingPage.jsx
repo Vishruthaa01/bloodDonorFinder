@@ -49,6 +49,18 @@ export const LandingPage = () => {
           <p>Strict clinical check before collection to ensure safety and record tracking compliance.</p>
         </div>
       </section>
+
+      <footer style={{ textAlign: 'center', paddingTop: '20px', borderTop: '1px solid var(--border-color)', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+        © 2026 LifeShare • Emergency Blood Matching Network •{' '}
+        <a
+          href="#"
+          onClick={(e) => { e.preventDefault(); setPage('admin-login'); }}
+          style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}
+          title="Owner Access"
+        >
+          System Administration
+        </a>
+      </footer>
     </div>
   );
 };

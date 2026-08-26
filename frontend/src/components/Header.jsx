@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Heart, LogOut, ShieldCheck } from 'lucide-react';
+import { Heart, LogOut } from 'lucide-react';
 
 export const Header = () => {
   const { user, logout, page, setPage } = useContext(AuthContext);
@@ -24,22 +24,18 @@ export const Header = () => {
               </button>
             </>
           ) : (
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                className={`btn btn-sm ${page === 'login' ? 'btn-primary' : 'btn-secondary'}`}
-                onClick={() => setPage('login')}
-              >
-                User Login
-              </button>
-              <button
-                className={`btn btn-sm ${page === 'admin-login' ? 'btn-primary' : 'btn-outline'}`}
-                onClick={() => setPage('admin-login')}
-                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-              >
-                <ShieldCheck size={14} />
-                <span>Admin Login</span>
-              </button>
-            </div>
+            <>
+              {page !== 'login' && (
+                <button className="btn btn-secondary btn-sm" onClick={() => setPage('login')}>
+                  Login
+                </button>
+              )}
+              {page === 'login' && (
+                <button className="btn btn-primary btn-sm" onClick={() => setPage('landing')}>
+                  Home
+                </button>
+              )}
+            </>
           )}
         </nav>
       </div>
