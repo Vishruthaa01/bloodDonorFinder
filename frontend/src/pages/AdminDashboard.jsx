@@ -11,7 +11,8 @@ import {
   Search,
   Eye,
   Check,
-  X
+  X,
+  ShieldCheck
 } from 'lucide-react';
 
 export const AdminDashboard = () => {
@@ -235,7 +236,7 @@ export const AdminDashboard = () => {
       {/* Sidebar Navigation */}
       <aside className="admin-sidebar">
         <div className="admin-sidebar-brand">
-          <Heart size={22} fill="currentColor" />
+          <Heart size={24} fill="currentColor" />
           <span>Blood Donor Finder</span>
         </div>
 
@@ -255,7 +256,7 @@ export const AdminDashboard = () => {
             <UserCheck size={18} />
             <span>Donor Verification</span>
             {stats.pendingDonors > 0 && (
-              <span className="badge badge-urgency-high" style={{ marginLeft: 'auto', padding: '2px 6px' }}>
+              <span className="badge badge-urgency-high" style={{ marginLeft: 'auto', padding: '2px 8px', fontSize: '0.75rem' }}>
                 {stats.pendingDonors}
               </span>
             )}
@@ -268,7 +269,7 @@ export const AdminDashboard = () => {
             <Building2 size={18} />
             <span>Hospital Verification</span>
             {stats.pendingHospitals > 0 && (
-              <span className="badge badge-urgency-high" style={{ marginLeft: 'auto', padding: '2px 6px' }}>
+              <span className="badge badge-urgency-high" style={{ marginLeft: 'auto', padding: '2px 8px', fontSize: '0.75rem' }}>
                 {stats.pendingHospitals}
               </span>
             )}
@@ -293,6 +294,31 @@ export const AdminDashboard = () => {
 
       {/* Main Admin Content */}
       <main className="admin-content">
+        {/* Top Header Identity Bar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', borderBottom: '1px solid var(--border-color)', paddingBottom: '16px' }}>
+          <div>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
+              {activeTab === 'dashboard' && 'System Overview'}
+              {activeTab === 'donor-verification' && 'Donor Verification'}
+              {activeTab === 'hospital-verification' && 'Hospital Verification'}
+              {activeTab === 'donations' && 'Completed Donations'}
+            </h2>
+            <p style={{ margin: '4px 0 0 0', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+              {activeTab === 'dashboard' && 'Real-time metrics, donor & hospital verification overview.'}
+              {activeTab === 'donor-verification' && 'Review donor registration requests and update account status.'}
+              {activeTab === 'hospital-verification' && 'Review hospital registrations and manage verification status.'}
+              {activeTab === 'donations' && 'Log of all fulfilled blood donations across authorized centers.'}
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', backgroundColor: 'var(--bg-card)', padding: '8px 16px', borderRadius: 'var(--radius-full)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
+            <ShieldCheck size={18} style={{ color: 'var(--primary)' }} />
+            <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+              {user.name} <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500 }}>(Admin)</span>
+            </span>
+          </div>
+        </div>
+
         {loading ? (
           <div style={{ padding: '40px 0', color: 'var(--text-secondary)', fontWeight: 600 }}>
             Loading Admin Dashboard...
@@ -302,64 +328,59 @@ export const AdminDashboard = () => {
             {/* 1. DASHBOARD VIEW */}
             {activeTab === 'dashboard' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-                <div>
-                  <h2>Admin Dashboard</h2>
-                  <p style={{ margin: 0 }}>System verification and completed donations statistics.</p>
-                </div>
-
-                {/* 7 Key Metrics Cards */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-                  <div className="card" style={{ padding: '18px', borderLeft: '4px solid var(--primary)' }}>
+                {/* 7 Key Metrics Cards Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+                  <div className="card" style={{ padding: '20px', borderLeft: '4px solid var(--primary)' }}>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Total Donors</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>
+                    <div style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>
                       {stats.totalDonors}
                     </div>
                   </div>
 
-                  <div className="card" style={{ padding: '18px', borderLeft: '4px solid var(--success)' }}>
+                  <div className="card" style={{ padding: '20px', borderLeft: '4px solid var(--success)' }}>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Verified Donors</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--success)', marginTop: '4px' }}>
+                    <div style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--success)', marginTop: '4px' }}>
                       {stats.verifiedDonors}
                     </div>
                   </div>
 
-                  <div className="card" style={{ padding: '18px', borderLeft: '4px solid var(--warning)' }}>
+                  <div className="card" style={{ padding: '20px', borderLeft: '4px solid var(--warning)' }}>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Pending Donor Verifications</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--warning)', marginTop: '4px' }}>
+                    <div style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--warning)', marginTop: '4px' }}>
                       {stats.pendingDonors}
                     </div>
                   </div>
 
-                  <div className="card" style={{ padding: '18px', borderLeft: '4px solid #3b82f6' }}>
+                  <div className="card" style={{ padding: '20px', borderLeft: '4px solid #3b82f6' }}>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Total Hospitals</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#3b82f6', marginTop: '4px' }}>
+                    <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#3b82f6', marginTop: '4px' }}>
                       {stats.totalHospitals}
                     </div>
                   </div>
 
-                  <div className="card" style={{ padding: '18px', borderLeft: '4px solid var(--success)' }}>
+                  <div className="card" style={{ padding: '20px', borderLeft: '4px solid var(--success)' }}>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Verified Hospitals</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--success)', marginTop: '4px' }}>
+                    <div style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--success)', marginTop: '4px' }}>
                       {stats.verifiedHospitals}
                     </div>
                   </div>
 
-                  <div className="card" style={{ padding: '18px', borderLeft: '4px solid var(--warning)' }}>
+                  <div className="card" style={{ padding: '20px', borderLeft: '4px solid var(--warning)' }}>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Pending Hospital Verifications</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--warning)', marginTop: '4px' }}>
+                    <div style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--warning)', marginTop: '4px' }}>
                       {stats.pendingHospitals}
                     </div>
                   </div>
 
-                  <div className="card" style={{ padding: '18px', borderLeft: '4px solid var(--primary)' }}>
+                  <div className="card" style={{ padding: '20px', borderLeft: '4px solid var(--primary)' }}>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Total Donations</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--primary)', marginTop: '4px' }}>
+                    <div style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--primary)', marginTop: '4px' }}>
                       {stats.totalDonations}
                     </div>
                   </div>
                 </div>
 
-                {/* Quick Pending Items Lists */}
+                {/* Quick Pending Items Grid */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '20px' }}>
                   {/* Pending Donors Quick List */}
                   <div className="card">
@@ -437,9 +458,9 @@ export const AdminDashboard = () => {
               <div className="card">
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                   <div>
-                    <h3 style={{ margin: 0 }}>Donor Verification</h3>
+                    <h3 style={{ margin: 0 }}>Registered Donors</h3>
                     <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      View donor details and verify or reject registrations.
+                      Search and verify donor accounts.
                     </p>
                   </div>
 
@@ -450,7 +471,7 @@ export const AdminDashboard = () => {
                       value={donorFilter}
                       onChange={e => setDonorFilter(e.target.value)}
                     >
-                      <option value="all">All Donors</option>
+                      <option value="all">All Statuses</option>
                       <option value="pending">Pending</option>
                       <option value="verified">Verified</option>
                     </select>
@@ -542,9 +563,9 @@ export const AdminDashboard = () => {
               <div className="card">
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                   <div>
-                    <h3 style={{ margin: 0 }}>Hospital Verification</h3>
+                    <h3 style={{ margin: 0 }}>Registered Hospitals</h3>
                     <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      View hospital details and verify or reject registration requests.
+                      Search and verify hospital registrations.
                     </p>
                   </div>
 
@@ -555,7 +576,7 @@ export const AdminDashboard = () => {
                       value={hospitalFilter}
                       onChange={e => setHospitalFilter(e.target.value)}
                     >
-                      <option value="all">All Hospitals</option>
+                      <option value="all">All Statuses</option>
                       <option value="pending">Pending</option>
                       <option value="verified">Verified</option>
                     </select>
