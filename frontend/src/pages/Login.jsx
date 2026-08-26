@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { ShieldCheck } from 'lucide-react';
 
 export const Login = () => {
   const { login, setPage } = useContext(AuthContext);
@@ -20,9 +21,13 @@ export const Login = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '60px auto', width: '100%' }}>
+    <div style={{ maxWidth: '400px', margin: '50px auto', width: '100%' }}>
       <div className="card">
-        <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>Welcome Back</h2>
+        <h2 style={{ textAlign: 'center', marginBottom: '8px' }}>User Login</h2>
+        <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '24px' }}>
+          Portal access for Registered Donors and Hospitals.
+        </p>
+
         {error && <div className="alert alert-error">{error}</div>}
 
         <form onSubmit={handleSubmit}>
@@ -58,6 +63,17 @@ export const Login = () => {
           <a href="#" onClick={(e) => { e.preventDefault(); setPage('register-donor'); }} style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>Register as Donor</a>
           {' or '}
           <a href="#" onClick={(e) => { e.preventDefault(); setPage('register-hospital'); }} style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>Register as Hospital</a>
+        </div>
+
+        <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border-color)', textAlign: 'center' }}>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => setPage('admin-login')}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem' }}
+          >
+            <ShieldCheck size={14} style={{ color: 'var(--primary)' }} />
+            <span>Owner / Admin Portal Access</span>
+          </button>
         </div>
       </div>
     </div>

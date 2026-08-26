@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Heart, Shield, Activity, MapPin } from 'lucide-react';
+import { ShieldCheck, Activity, MapPin, Shield } from 'lucide-react';
 
 export const LandingPage = () => {
   const { setPage } = useContext(AuthContext);
@@ -50,16 +50,18 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      <footer style={{ textAlign: 'center', paddingTop: '20px', borderTop: '1px solid var(--border-color)', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-        © 2026 LifeShare • Emergency Blood Matching Network •{' '}
-        <a
-          href="#"
-          onClick={(e) => { e.preventDefault(); setPage('admin-login'); }}
-          style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}
-          title="Owner Access"
+      <footer style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', paddingTop: '24px', borderTop: '1px solid var(--border-color)', gap: '16px' }}>
+        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+          © 2026 LifeShare • Emergency Blood Matching & Donor Network
+        </span>
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={() => setPage('admin-login')}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem' }}
         >
-          System Administration
-        </a>
+          <ShieldCheck size={14} style={{ color: 'var(--primary)' }} />
+          <span>Owner / Admin Portal</span>
+        </button>
       </footer>
     </div>
   );
