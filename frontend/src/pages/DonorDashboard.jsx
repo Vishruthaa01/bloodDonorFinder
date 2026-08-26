@@ -117,6 +117,7 @@ export const DonorDashboard = () => {
   const completedDonationsCount = history.filter(h => (h.status === 'completed' || h.status === 'closed') && h.response === 'accepted').length;
   const acceptedRequestsCount = history.filter(h => h.response === 'accepted').length;
   const livesSavedCount = completedDonationsCount * 3;
+  const completedDonationsList = history.filter(h => (h.status === 'completed' || h.status === 'closed') && h.response === 'accepted');
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
@@ -187,6 +188,45 @@ export const DonorDashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Prominent Banner for Completed Donations & Certificate Download */}
+      {completedDonationsList.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {completedDonationsList.map(completedReq => (
+            <div key={completedReq._id} className="card" style={{ borderLeft: '6px solid var(--success)', backgroundColor: 'var(--success-light)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+              <div>
+                <span className="badge badge-completed" style={{ marginBottom: '8px' }}>
+                  DONATION COMPLETED 🎉
+                </span>
+                <h3 style={{ margin: 0, color: 'var(--success)' }}>
+                  Thank you for saving lives! Your donation certificate is ready.
+                </h3>
+                <p style={{ margin: '4px 0 0 0', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                  Hospital: <strong>{completedReq.hospital?.name || 'Authorized Donation Center'}</strong> | Date: <strong>{new Date(completedReq.updatedAt || completedReq.createdAt).toLocaleDateString()}</strong> | Blood Group: <strong>{completedReq.bloodGroup}</strong>
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleDownloadCertificate(completedReq._id)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontWeight: 700 }}
+                >
+                  <Download size={18} />
+                  <span>Download Certificate PDF</span>
+                </button>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setSelectedCert(completedReq)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <Award size={16} />
+                  <span>Preview Certificate</span>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {incomingRequest && (
         <div className="card" style={{ borderLeft: '6px solid var(--primary)', display: 'flex', flexDirection: 'column', gap: '20px' }}>

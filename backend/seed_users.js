@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 const User = require('./models/User');
+const Hospital = require('./models/Hospital');
 
 const usersToCreate = [
   {
@@ -184,6 +185,31 @@ const usersToCreate = [
   }
 ];
 
+const hospitalsToCreate = [
+  {
+    name: 'Government Hospital - Perundurai',
+    regId: 'GOV01',
+    email: 'gh@gmail.com',
+    address: 'Perundurai, Erode',
+    location: { type: 'Point', coordinates: [77.587466, 11.276032] },
+    contactPerson: 'Gov_Admin',
+    phone: '4289653385',
+    role: 'hospital',
+    verified: true
+  },
+  {
+    name: 'Dharan Hospital',
+    regId: 'DHARAN02',
+    email: 'dharanhospital@gmail.com',
+    address: 'Salem',
+    location: { type: 'Point', coordinates: [78.145247, 11.625033] },
+    contactPerson: 'Dharan_Admin',
+    phone: '4856320197',
+    role: 'hospital',
+    verified: true
+  }
+];
+
 const connect = async () => {
   const uris = [
     process.env.MONGODB_URI,
@@ -204,37 +230,38 @@ const connect = async () => {
   throw new Error('All database connection attempts failed');
 };
 
-const seedUsers = async () => {
+const seedDatabase = async () => {
   try {
     await connect();
 
-    console.log('Deleting existing users...');
-    const deleteResult = await User.deleteMany({});
-    console.log(`Deleted ${deleteResult.deletedCount} existing user(s).`);
+    console.log('Deleting existing users and hospitals...');
+    await User.deleteMany({});
+    await Hospital.deleteMany({});
 
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash('password123', salt);
 
     console.log(`Creating ${usersToCreate.length} users with password 'password123'...`);
-    const usersWithHash = usersToCreate.map(u => ({
-      ...u,
-      passwordHash
-    }));
-
+    const usersWithHash = usersToCreate.map(u => ({ ...u, passwordHash }));
     const createdUsers = await User.insertMany(usersWithHash);
-    console.log(`Successfully updated ${createdUsers.length} users!`);
+    console.log(`Successfully created ${createdUsers.length} users!`);
 
-    console.log('\n--- Active Accounts ---');
-    createdUsers.forEach((user, idx) => {
-      console.log(`${idx + 1}. ${user.name} (${user.role}) - ${user.email} - Verified: ${user.verified}`);
+    console.log(`Creating ${hospitalsToCreate.length} hospitals with password 'password123'...`);
+    const hospitalsWithHash = hospitalsToCreate.map(h => ({ ...h, passwordHash }));
+    const createdHospitals = await Hospital.insertMany(hospitalsWithHash);
+    console.log(`Successfully created ${createdHospitals.length} hospitals!`);
+
+    console.log('\n--- Active Hospital Accounts ---');
+    createdHospitals.forEach((h, idx) => {
+      console.log(`${idx + 1}. ${h.name} (${h.regId}) - ${h.email} - Password: password123`);
     });
-    console.log('-----------------------\n');
+    console.log('-------------------------------\n');
   } catch (error) {
-    console.error('Error seeding users:', error);
+    console.error('Error seeding database:', error);
   } finally {
     await mongoose.connection.close();
     console.log('Connection closed.');
   }
 };
 
-seedUsers();
+seedDatabase();
