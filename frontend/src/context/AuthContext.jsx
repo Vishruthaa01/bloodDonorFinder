@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [selectedRequestId, setSelectedRequestId] = useState(null);
 
-  const API_URL = 'http://127.0.0.1:5000/api';
+  const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://127.0.0.1:5000/api' : '/api');
 
   useEffect(() => {
     const loadUser = async () => {
