@@ -5,157 +5,182 @@ const dotenv = require('dotenv');
 dotenv.config();
 const User = require('./models/User');
 
-// Coordinates around Perundurai (lng: ~77.58, lat: ~11.27) and Erode (lng: ~77.72, lat: ~11.34)
 const usersToCreate = [
+  {
+    name: 'System Admin',
+    phone: '9999999999',
+    email: 'admin@lifeshare.com',
+    bloodGroup: 'O+',
+    location: { type: 'Point', coordinates: [77.5874, 11.2760] },
+    isAvailable: true,
+    age: 35,
+    role: 'admin',
+    verified: true
+  },
   {
     name: 'Aarav Sharma',
     phone: '9876543210',
     email: 'aarav.sharma@example.com',
     bloodGroup: 'O+',
-    location: { type: 'Point', coordinates: [77.5828, 11.2742] }, // Perundurai Town
+    location: { type: 'Point', coordinates: [77.5828, 11.2742] },
     isAvailable: true,
     age: 28,
-    role: 'donor'
+    role: 'donor',
+    verified: true
   },
   {
     name: 'Priya Patel',
     phone: '9876543211',
     email: 'priya.patel@example.com',
     bloodGroup: 'A+',
-    location: { type: 'Point', coordinates: [77.5950, 11.2850] }, // Perundurai Medical College
+    location: { type: 'Point', coordinates: [77.5950, 11.2850] },
     isAvailable: true,
     age: 25,
-    role: 'donor'
+    role: 'donor',
+    verified: false
   },
   {
     name: 'Rohan Verma',
     phone: '9876543212',
     email: 'rohan.verma@example.com',
     bloodGroup: 'B+',
-    location: { type: 'Point', coordinates: [77.5650, 11.2680] }, // SIPCOT Perundurai
+    location: { type: 'Point', coordinates: [77.5650, 11.2680] },
     isAvailable: true,
     age: 32,
-    role: 'donor'
+    role: 'donor',
+    verified: true
   },
   {
     name: 'Ananya Reddy',
     phone: '9876543213',
     email: 'ananya.reddy@example.com',
     bloodGroup: 'O-',
-    location: { type: 'Point', coordinates: [77.6050, 11.2710] }, // Perundurai RS
+    location: { type: 'Point', coordinates: [77.6050, 11.2710] },
     isAvailable: true,
     age: 24,
-    role: 'donor'
+    role: 'donor',
+    verified: false
   },
   {
     name: 'Vikram Singh',
     phone: '9876543214',
     email: 'vikram.singh@example.com',
     bloodGroup: 'AB+',
-    location: { type: 'Point', coordinates: [77.6750, 11.3150] }, // Thindal, Erode Rd
+    location: { type: 'Point', coordinates: [77.6750, 11.3150] },
     isAvailable: true,
     age: 29,
-    role: 'donor'
+    role: 'donor',
+    verified: true
   },
   {
     name: 'Sneha Rao',
     phone: '9876543215',
     email: 'sneha.rao@example.com',
     bloodGroup: 'A-',
-    location: { type: 'Point', coordinates: [77.6500, 11.3000] }, // Veppampalayam
+    location: { type: 'Point', coordinates: [77.6500, 11.3000] },
     isAvailable: true,
     age: 27,
-    role: 'donor'
+    role: 'donor',
+    verified: true
   },
   {
     name: 'Rahul Nair',
     phone: '9876543216',
     email: 'rahul.nair@example.com',
     bloodGroup: 'B-',
-    location: { type: 'Point', coordinates: [77.6950, 11.3280] }, // Palayapalayam, Erode
+    location: { type: 'Point', coordinates: [77.6950, 11.3280] },
     isAvailable: true,
     age: 31,
-    role: 'donor'
+    role: 'donor',
+    verified: false
   },
   {
     name: 'Kavya Joshi',
     phone: '9876543217',
     email: 'kavya.joshi@example.com',
     bloodGroup: 'O+',
-    location: { type: 'Point', coordinates: [77.7180, 11.3400] }, // Erode Bus Stand
+    location: { type: 'Point', coordinates: [77.7180, 11.3400] },
     isAvailable: true,
     age: 26,
-    role: 'donor'
+    role: 'donor',
+    verified: true
   },
   {
     name: 'Aditya Gupta',
     phone: '9876543218',
     email: 'aditya.gupta@example.com',
     bloodGroup: 'AB-',
-    location: { type: 'Point', coordinates: [77.7260, 11.3320] }, // Erode Junction
+    location: { type: 'Point', coordinates: [77.7260, 11.3320] },
     isAvailable: false,
     age: 34,
-    role: 'donor'
+    role: 'donor',
+    verified: false
   },
   {
     name: 'Meera Iyer',
     phone: '9876543219',
     email: 'meera.iyer@example.com',
     bloodGroup: 'A+',
-    location: { type: 'Point', coordinates: [77.7100, 11.3200] }, // Surampatti, Erode
+    location: { type: 'Point', coordinates: [77.7100, 11.3200] },
     isAvailable: true,
     age: 23,
-    role: 'donor'
+    role: 'donor',
+    verified: true
   },
   {
     name: 'Siddharth Mehta',
     phone: '9876543220',
     email: 'siddharth.mehta@example.com',
     bloodGroup: 'B+',
-    location: { type: 'Point', coordinates: [77.6700, 11.4100] }, // Chithode, Erode
+    location: { type: 'Point', coordinates: [77.6700, 11.4100] },
     isAvailable: true,
     age: 30,
-    role: 'donor'
+    role: 'donor',
+    verified: true
   },
   {
     name: 'Diya Kulkarni',
     phone: '9876543221',
     email: 'diya.kulkarni@example.com',
     bloodGroup: 'O-',
-    location: { type: 'Point', coordinates: [77.7300, 11.3150] }, // Moolapalayam, Erode
+    location: { type: 'Point', coordinates: [77.7300, 11.3150] },
     isAvailable: true,
     age: 27,
-    role: 'donor'
+    role: 'donor',
+    verified: true
   },
   {
     name: 'Arjun Deshmukh',
     phone: '9876543222',
     email: 'arjun.deshmukh@example.com',
     bloodGroup: 'O+',
-    location: { type: 'Point', coordinates: [77.5450, 11.2250] }, // Ingur (Near Perundurai)
+    location: { type: 'Point', coordinates: [77.5450, 11.2250] },
     isAvailable: true,
     age: 28,
-    role: 'donor'
+    role: 'donor',
+    verified: true
   },
   {
     name: 'Neha Kapoor',
     phone: '9876543223',
     email: 'neha.kapoor@example.com',
     bloodGroup: 'A-',
-    location: { type: 'Point', coordinates: [77.7500, 11.3050] }, // Solar, Erode
+    location: { type: 'Point', coordinates: [77.7500, 11.3050] },
     isAvailable: false,
     age: 33,
-    role: 'donor'
+    role: 'donor',
+    verified: false
   },
   {
     name: 'Karan Malhotra',
     phone: '9876543224',
     email: 'karan.malhotra@example.com',
     bloodGroup: 'B+',
-    location: { type: 'Point', coordinates: [77.7050, 11.3100] }, // Kasipalayam, Erode
+    location: { type: 'Point', coordinates: [77.7050, 11.3100] },
     isAvailable: true,
     age: 29,
-    role: 'donor'
+    role: 'donor',
+    verified: true
   }
 ];
 
@@ -190,20 +215,20 @@ const seedUsers = async () => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash('password123', salt);
 
-    console.log(`Creating ${usersToCreate.length} donor users...`);
+    console.log(`Creating ${usersToCreate.length} users with password 'password123'...`);
     const usersWithHash = usersToCreate.map(u => ({
       ...u,
       passwordHash
     }));
 
     const createdUsers = await User.insertMany(usersWithHash);
-    console.log(`Successfully updated ${createdUsers.length} donor users!`);
+    console.log(`Successfully updated ${createdUsers.length} users!`);
 
-    console.log('\n--- Active Donor Accounts ---');
+    console.log('\n--- Active Accounts ---');
     createdUsers.forEach((user, idx) => {
-      console.log(`${idx + 1}. ${user.name} (${user.bloodGroup}) - ${user.email}`);
+      console.log(`${idx + 1}. ${user.name} (${user.role}) - ${user.email} - Verified: ${user.verified}`);
     });
-    console.log('------------------------------\n');
+    console.log('-----------------------\n');
   } catch (error) {
     console.error('Error seeding users:', error);
   } finally {

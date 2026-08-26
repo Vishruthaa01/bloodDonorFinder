@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Heart, LogOut } from 'lucide-react';
+import { Heart, LogOut, ShieldCheck } from 'lucide-react';
 
 export const Header = () => {
   const { user, logout, page, setPage } = useContext(AuthContext);
@@ -8,7 +8,7 @@ export const Header = () => {
   return (
     <header className="navbar">
       <div className="navbar-inner">
-        <div className="logo" onClick={() => setPage(user ? (user.role === 'donor' ? 'donor-dashboard' : 'hospital-dashboard') : 'landing')}>
+        <div className="logo" onClick={() => setPage(user ? (user.role === 'admin' ? 'admin-dashboard' : (user.role === 'donor' ? 'donor-dashboard' : 'hospital-dashboard')) : 'landing')}>
           <Heart size={28} fill="currentColor" />
           <span>LifeShare</span>
         </div>
@@ -16,7 +16,7 @@ export const Header = () => {
           {user ? (
             <>
               <span className="user-email" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                {user.name} ({user.role === 'donor' ? 'Donor' : 'Hospital'})
+                {user.name} ({user.role === 'admin' ? 'Admin' : (user.role === 'donor' ? 'Donor' : 'Hospital')})
               </span>
               <button className="btn btn-secondary btn-sm" onClick={logout}>
                 <LogOut size={16} />
@@ -24,18 +24,22 @@ export const Header = () => {
               </button>
             </>
           ) : (
-            <>
-              {page !== 'login' && (
-                <button className="btn btn-secondary btn-sm" onClick={() => setPage('login')}>
-                  Login
-                </button>
-              )}
-              {page === 'login' && (
-                <button className="btn btn-primary btn-sm" onClick={() => setPage('landing')}>
-                  Home
-                </button>
-              )}
-            </>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                className={`btn btn-sm ${page === 'login' ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => setPage('login')}
+              >
+                User Login
+              </button>
+              <button
+                className={`btn btn-sm ${page === 'admin-login' ? 'btn-primary' : 'btn-outline'}`}
+                onClick={() => setPage('admin-login')}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <ShieldCheck size={14} />
+                <span>Admin Login</span>
+              </button>
+            </div>
           )}
         </nav>
       </div>

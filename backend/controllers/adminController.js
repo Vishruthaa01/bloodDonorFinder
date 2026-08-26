@@ -6,19 +6,25 @@ const BloodRequest = require('../models/BloodRequest');
 exports.getStats = async (req, res) => {
   try {
     const totalDonors = await User.countDocuments({ role: 'donor' });
+    const verifiedDonors = await User.countDocuments({ role: 'donor', verified: true });
+    const pendingDonors = await User.countDocuments({ role: 'donor', verified: false });
+
     const totalHospitals = await Hospital.countDocuments({});
-    const totalRequests = await BloodRequest.countDocuments({});
-    const completedRequests = await BloodRequest.countDocuments({ status: 'completed' });
-    const activeRequests = await BloodRequest.countDocuments({
-      status: { $in: ['searching', 'donor_found', 'eligibility_pending', 'confirmed', 'in_progress'] }
+    const verifiedHospitals = await Hospital.countDocuments({ verified: true });
+    const pendingHospitals = await Hospital.countDocuments({ verified: false });
+
+    const totalDonations = await BloodRequest.countDocuments({
+      status: { $in: ['completed', 'closed'] }
     });
 
     res.json({
       totalDonors,
+      verifiedDonors,
+      pendingDonors,
       totalHospitals,
-      totalRequests,
-      completedRequests,
-      activeRequests
+      verifiedHospitals,
+      pendingHospitals,
+      totalDonations
     });
   } catch (error) {
     console.error(error);
@@ -52,21 +58,50 @@ exports.getHospitals = async (req, res) => {
   }
 };
 
-// Get list of all blood requests
-exports.getRequests = async (req, res) => {
+// Get list of completed donations
+exports.getDonations = async (req, res) => {
   try {
-    const requests = await BloodRequest.find({})
+    const donations = await BloodRequest.find({
+      status: { $in: ['completed', 'closed'] }
+    })
       .populate('hospitalId', 'name email address phone')
       .populate('acceptedDonorId', 'name email phone bloodGroup')
-      .sort({ createdAt: -1 });
-    res.json(requests);
+      .sort({ updatedAt: -1, createdAt: -1 });
+    res.json(donations);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error fetching blood requests' });
+    res.status(500).json({ message: 'Error fetching completed donations' });
   }
 };
 
-// Toggle hospital verification status
+// Verify or reject donor account
+exports.toggleVerifyDonor = async (req, res) => {
+  try {
+    const donor = await User.findById(req.params.id);
+    if (!donor) {
+      return res.status(404).json({ message: 'Donor not found' });
+    }
+
+    const { verified } = req.body;
+    if (typeof verified === 'boolean') {
+      donor.verified = verified;
+    } else {
+      donor.verified = !donor.verified;
+    }
+
+    await donor.save();
+
+    res.json({
+      message: `Donor '${donor.name}' verification status updated to ${donor.verified ? 'Verified' : 'Rejected/Pending'}`,
+      donor
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error updating donor verification status' });
+  }
+};
+
+// Verify or reject hospital account
 exports.toggleVerifyHospital = async (req, res) => {
   try {
     const hospital = await Hospital.findById(req.params.id);
@@ -74,11 +109,17 @@ exports.toggleVerifyHospital = async (req, res) => {
       return res.status(404).json({ message: 'Hospital not found' });
     }
 
-    hospital.verified = !hospital.verified;
+    const { verified } = req.body;
+    if (typeof verified === 'boolean') {
+      hospital.verified = verified;
+    } else {
+      hospital.verified = !hospital.verified;
+    }
+
     await hospital.save();
 
     res.json({
-      message: `Hospital '${hospital.name}' verification status changed to ${hospital.verified}`,
+      message: `Hospital '${hospital.name}' verification status updated to ${hospital.verified ? 'Verified' : 'Rejected/Pending'}`,
       hospital
     });
   } catch (error) {

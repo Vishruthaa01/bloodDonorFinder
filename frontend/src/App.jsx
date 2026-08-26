@@ -3,6 +3,7 @@ import { AuthContext } from './context/AuthContext';
 import { Header } from './components/Header';
 import { LandingPage } from './pages/LandingPage';
 import { Login } from './pages/Login';
+import { AdminLogin } from './pages/AdminLogin';
 import { Register } from './pages/Register';
 import { DonorDashboard } from './pages/DonorDashboard';
 import { HospitalDashboard } from './pages/HospitalDashboard';
@@ -32,6 +33,8 @@ function App() {
         return <LandingPage />;
       case 'login':
         return <Login />;
+      case 'admin-login':
+        return <AdminLogin />;
       case 'register-donor':
         return <Register registerType="donor" />;
       case 'register-hospital':
@@ -51,8 +54,8 @@ function App() {
 
   return (
     <div className="app-container">
-      <Header />
-      <main className="main-content">
+      {page !== 'admin-dashboard' && <Header />}
+      <main className={page === 'admin-dashboard' ? 'admin-app-wrapper' : 'main-content'}>
         {renderPage()}
       </main>
     </div>

@@ -20,7 +20,8 @@ const UserSchema = new mongoose.Schema({
   isAvailable: { type: Boolean, default: true },
   lastDonationDate: { type: Date },
   age: { type: Number, required: true },
-  role: { type: String, default: 'donor' }
+  role: { type: String, default: 'donor' },
+  verified: { type: Boolean, default: true }
 }, {
   timestamps: true
 });

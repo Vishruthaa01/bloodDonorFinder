@@ -4,8 +4,9 @@ const {
   getStats,
   getDonors,
   getHospitals,
-  getRequests,
-  toggleVerifyHospital
+  getDonations,
+  toggleVerifyHospital,
+  toggleVerifyDonor
 } = require('../controllers/adminController');
 const { protect, authorize } = require('../middleware/auth');
 
@@ -13,7 +14,8 @@ const { protect, authorize } = require('../middleware/auth');
 router.get('/stats', protect, authorize('admin'), getStats);
 router.get('/donors', protect, authorize('admin'), getDonors);
 router.get('/hospitals', protect, authorize('admin'), getHospitals);
-router.get('/requests', protect, authorize('admin'), getRequests);
+router.get('/donations', protect, authorize('admin'), getDonations);
+router.patch('/donors/:id/verify', protect, authorize('admin'), toggleVerifyDonor);
 router.patch('/hospitals/:id/verify', protect, authorize('admin'), toggleVerifyHospital);
 
 module.exports = router;
