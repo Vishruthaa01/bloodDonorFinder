@@ -272,14 +272,10 @@ export const RequestTracking = () => {
         {request.status === 'completed' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
             <p>
-              🎉 <strong>Donation Completed:</strong> The blood has been collected successfully. You can download the donation certificate below or close this request.
+              🎉 <strong>Donation Completed:</strong> The blood has been collected successfully. Click below to close and archive this request.
             </p>
             <div style={{ display: 'flex', gap: '12px' }}>
-              <button className="btn btn-primary" onClick={() => handleDownloadCertificate(request._id)}>
-                <Download size={16} />
-                <span>Download Certificate PDF</span>
-              </button>
-              <button className="btn btn-secondary" onClick={() => handleAction('close')}>
+              <button className="btn btn-primary" onClick={() => handleAction('close')}>
                 Close & Archive Request
               </button>
             </div>
@@ -292,12 +288,6 @@ export const RequestTracking = () => {
               ✅ <strong>Archived:</strong> This request was closed on{' '}
               {request.closedAt ? new Date(request.closedAt).toLocaleDateString() : 'N/A'}.
             </p>
-            <div>
-              <button className="btn btn-primary btn-sm" onClick={() => handleDownloadCertificate(request._id)}>
-                <Download size={14} />
-                <span>Download Certificate PDF</span>
-              </button>
-            </div>
           </div>
         )}
       </div>

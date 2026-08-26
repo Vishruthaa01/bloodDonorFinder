@@ -114,10 +114,13 @@ export const DonorDashboard = () => {
     }
   };
 
-  const completedDonationsCount = history.filter(h => h.status === 'completed' || h.status === 'closed').length;
-  const acceptedRequestsCount = history.filter(h => h.response === 'accepted' || h.status === 'completed' || h.status === 'closed').length;
+  const completedDonationsList = history.filter(h =>
+    (h.status === 'completed' || h.status === 'closed') &&
+    (h.response === 'accepted' || (h.acceptedDonorId && (h.acceptedDonorId._id || h.acceptedDonorId).toString() === user._id.toString()))
+  );
+  const completedDonationsCount = completedDonationsList.length;
+  const acceptedRequestsCount = history.filter(h => h.response === 'accepted').length;
   const livesSavedCount = completedDonationsCount * 3;
-  const completedDonationsList = history.filter(h => h.status === 'completed' || h.status === 'closed');
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
@@ -336,7 +339,7 @@ export const DonorDashboard = () => {
                       <span className={`badge badge-${req.status}`}>{req.status}</span>
                     </td>
                     <td style={{ padding: '12px' }}>
-                      {req.status === 'completed' || req.status === 'closed' ? (
+                      {(req.status === 'completed' || req.status === 'closed') && (req.response === 'accepted' || (req.acceptedDonorId && (req.acceptedDonorId._id || req.acceptedDonorId).toString() === user._id.toString())) ? (
                         <div style={{ display: 'flex', gap: '6px' }}>
                           <button
                             className="btn btn-primary btn-sm"

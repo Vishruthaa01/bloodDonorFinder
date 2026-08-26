@@ -435,12 +435,6 @@ export const HospitalDashboard = () => {
                             <Eye size={14} />
                             <span>Track Status</span>
                           </button>
-                          {(req.status === 'completed' || req.status === 'closed') && (
-                            <button className="btn btn-primary btn-sm" onClick={() => handleDownloadCertificate(req._id)} title="Download PDF Certificate">
-                              <Download size={14} />
-                              <span>Certificate</span>
-                            </button>
-                          )}
                         </div>
                       </td>
                     </tr>

@@ -27,6 +27,8 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Archives & Temporary files
+# Archives, Certificates & Temporary files
 db.zip
 *.tmp
+*.pdf
+*.zip
