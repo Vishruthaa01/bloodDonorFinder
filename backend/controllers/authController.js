@@ -178,3 +178,30 @@ exports.updateAvailability = async (req, res) => {
     res.status(500).json({ message: 'Server error updating availability' });
   }
 };
+
+exports.getAvailableDonors = async (req, res) => {
+  try {
+    const { bloodGroup, isAvailable } = req.query;
+    let query = { role: 'donor' };
+
+    if (bloodGroup && bloodGroup !== 'ALL') {
+      query.bloodGroup = bloodGroup;
+    }
+
+    if (isAvailable === 'true') {
+      query.isAvailable = true;
+    } else if (isAvailable === 'false') {
+      query.isAvailable = false;
+    }
+
+    const donors = await User.find(query)
+      .select('-passwordHash')
+      .sort({ isAvailable: -1, createdAt: -1 });
+
+    res.json(donors);
+  } catch (error) {
+    console.error('Error fetching available donors:', error);
+    res.status(500).json({ message: 'Server error fetching available donors' });
+  }
+};
+

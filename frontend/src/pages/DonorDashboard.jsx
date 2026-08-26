@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { SocketContext } from '../context/SocketContext';
-import { Heart, Check, X, Award, Printer } from 'lucide-react';
+import { Heart, Check, X, Award, Printer, Download } from 'lucide-react';
 import { MapView } from '../components/MapView';
 import { DonorEligibilityModal } from '../components/DonorEligibilityModal';
 
@@ -86,7 +86,35 @@ export const DonorDashboard = () => {
     }
   };
 
-  const completedDonationsCount = history.filter(h => h.status === 'completed' && h.response === 'accepted').length;
+  const handleDownloadCertificate = async (requestId) => {
+    try {
+      const res = await fetch(`${API_URL}/requests/${requestId}/certificate`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        addToast(data.message || 'Error downloading certificate', 'error');
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Blood_Donation_Certificate_${requestId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      addToast('Certificate downloaded successfully!', 'success');
+    } catch (err) {
+      console.error('Error downloading certificate:', err);
+      addToast('Network error downloading certificate PDF', 'error');
+    }
+  };
+
+  const completedDonationsCount = history.filter(h => (h.status === 'completed' || h.status === 'closed') && h.response === 'accepted').length;
   const acceptedRequestsCount = history.filter(h => h.response === 'accepted').length;
   const livesSavedCount = completedDonationsCount * 3;
 
@@ -268,15 +296,25 @@ export const DonorDashboard = () => {
                       <span className={`badge badge-${req.status}`}>{req.status}</span>
                     </td>
                     <td style={{ padding: '12px' }}>
-                      {req.status === 'completed' && req.response === 'accepted' && req.eligibility === 'eligible' ? (
-                        <button
-                          className="btn btn-outline btn-sm"
-                          onClick={() => setSelectedCert(req)}
-                          style={{ padding: '4px 8px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}
-                        >
-                          <Award size={12} />
-                          <span>Generate</span>
-                        </button>
+                      {(req.status === 'completed' || req.status === 'closed') && req.response === 'accepted' ? (
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          <button
+                            className="btn btn-primary btn-sm"
+                            onClick={() => handleDownloadCertificate(req._id)}
+                            style={{ padding: '4px 8px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+                          >
+                            <Download size={13} />
+                            <span>Download Certificate</span>
+                          </button>
+                          <button
+                            className="btn btn-secondary btn-sm"
+                            onClick={() => setSelectedCert(req)}
+                            style={{ padding: '4px 8px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+                          >
+                            <Award size={13} />
+                            <span>Preview</span>
+                          </button>
+                        </div>
                       ) : (
                         <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>—</span>
                       )}
@@ -295,7 +333,7 @@ export const DonorDashboard = () => {
             <div style={{ border: '2px solid var(--primary)', padding: '24px', textAlign: 'center' }}>
               <Heart size={44} fill="var(--primary)" color="var(--primary)" style={{ marginBottom: '12px' }} />
               <h2 style={{ fontFamily: 'Georgia, serif', color: 'var(--text-primary)', fontSize: '1.8rem', marginBottom: '4px' }}>
-                Certificate of Appreciation
+                Blood Donation Certificate
               </h2>
               <p style={{ fontStyle: 'italic', color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px' }}>
                 Presented to a life saver
@@ -309,17 +347,13 @@ export const DonorDashboard = () => {
                 For voluntarily donating <b>{selectedCert.unitsNeeded} unit(s)</b> of <b>{selectedCert.bloodGroup}</b> blood to <b>{selectedCert.hospital?.name}</b> on {new Date(selectedCert.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}. Your selfless contribution has helped save lives.
               </p>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px', padding: '0 10px' }}>
-                <div style={{ textAlign: 'left' }}>
-                  <div style={{ borderBottom: '1px solid var(--text-muted)', width: '130px', height: '24px' }}></div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>Medical Director</div>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '30px' }}>
                 <div>
                   <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-                    CERTIFICATE ID
+                    DONATION ID
                   </div>
-                  <code style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>
-                    LSC-{selectedCert._id.substring(18).toUpperCase()}
+                  <code style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 700 }}>
+                    {selectedCert._id}
                   </code>
                 </div>
               </div>
@@ -329,9 +363,9 @@ export const DonorDashboard = () => {
               <button className="btn btn-secondary btn-sm" onClick={() => setSelectedCert(null)}>
                 Close
               </button>
-              <button className="btn btn-primary btn-sm" onClick={() => window.print()}>
-                <Printer size={14} />
-                <span>Print / Save PDF</span>
+              <button className="btn btn-primary btn-sm" onClick={() => handleDownloadCertificate(selectedCert._id)}>
+                <Download size={14} />
+                <span>Download PDF Certificate</span>
               </button>
             </div>
           </div>

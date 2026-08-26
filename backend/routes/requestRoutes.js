@@ -10,11 +10,13 @@ const {
   confirmContact,
   completeRequest,
   closeRequest,
-  getNotifications
+  getNotifications,
+  generateCertificate
 } = require('../controllers/requestController');
 const { protect } = require('../middleware/auth');
 
 router.post('/', protect, createRequest);
+router.get('/:id/certificate', protect, generateCertificate);
 router.get('/:id', protect, getRequestById);
 router.get('/hospital/:hospitalId', protect, getHospitalRequests);
 router.get('/donor/:donorId', protect, getDonorRequests);

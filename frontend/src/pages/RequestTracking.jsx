@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { SocketContext } from '../context/SocketContext';
-import { ArrowLeft, User, Phone, Check, X, Clock, MapPin, CheckCircle, HelpCircle } from 'lucide-react';
+import { ArrowLeft, User, Phone, Check, X, Clock, MapPin, CheckCircle, HelpCircle, Download } from 'lucide-react';
 import { MapView } from '../components/MapView';
 
 export const RequestTracking = () => {
@@ -66,6 +66,34 @@ export const RequestTracking = () => {
     } catch (err) {
       console.error(err);
       addToast('Network error performing action', 'error');
+    }
+  };
+
+  const handleDownloadCertificate = async (requestId) => {
+    try {
+      const res = await fetch(`${API_URL}/requests/${requestId}/certificate`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        addToast(data.message || 'Error downloading certificate', 'error');
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Blood_Donation_Certificate_${requestId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      addToast('Certificate downloaded successfully!', 'success');
+    } catch (err) {
+      console.error('Error downloading certificate:', err);
+      addToast('Network error downloading certificate PDF', 'error');
     }
   };
 
@@ -150,14 +178,27 @@ export const RequestTracking = () => {
 
         {request.status === 'searching' && (
           <div style={{ padding: '16px 0' }}>
-            <p>
-              🔍 <strong>Status: Searching compatible donors...</strong> <br />
-              The matching engine is currently analyzing available donors within {request.radiusKm} km. Once a nearby compatible donor is notified, they have 3 minutes to accept. If they reject or time out, the system will auto-route to the next closest candidate.
-            </p>
-            {request.matchedDonors.length > 0 && (
+            {request.radiusKm >= 100 && request.matchedDonors.length === 0 ? (
+              <div style={{ backgroundColor: '#fffbe6', border: '1px solid #ffe58f', padding: '12px 16px', borderRadius: 'var(--radius-sm)', color: '#873800' }}>
+                ⚠️ <strong>No Compatible Donors Found:</strong> The matching engine searched up to the maximum 100 km radius, but no available compatible donors were found near the hospital location. You can try raising a new request with different criteria or registering local donors.
+              </div>
+            ) : (
+              <p>
+                🔍 <strong>Status: Searching compatible donors...</strong> <br />
+                {request.unitsNeeded > 1 ? (
+                  <>The matching engine is notifying <strong>multiple donors ({request.unitsNeeded} donors required)</strong> simultaneously within {request.radiusKm} km.</>
+                ) : (
+                  <>The matching engine is currently analyzing available donors within {request.radiusKm} km. Once a nearby compatible donor is notified, they have 3 minutes to accept.</>
+                )}
+              </p>
+            )}
+            {request.matchedDonors.filter(m => m.response === 'pending').length > 0 && (
               <div style={{ marginTop: '16px' }}>
-                <strong>Currently notified:</strong>{' '}
-                {request.matchedDonors[request.matchedDonors.length - 1].donorId.name} ({request.matchedDonors[request.matchedDonors.length - 1].donorId.bloodGroup})
+                <strong>Currently notified ({request.matchedDonors.filter(m => m.response === 'pending').length} donor(s)):</strong>{' '}
+                {request.matchedDonors
+                  .filter(m => m.response === 'pending')
+                  .map(m => `${m.donorId?.name || 'Donor'} (${m.donorId?.bloodGroup || request.bloodGroup})`)
+                  .join(', ')}
               </div>
             )}
           </div>
@@ -231,19 +272,33 @@ export const RequestTracking = () => {
         {request.status === 'completed' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
             <p>
-              🎉 <strong>Donation Completed:</strong> The blood has been collected successfully. You can close this request to archive it.
+              🎉 <strong>Donation Completed:</strong> The blood has been collected successfully. You can download the donation certificate below or close this request.
             </p>
-            <button className="btn btn-secondary" onClick={() => handleAction('close')}>
-              Close & Archive Request
-            </button>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button className="btn btn-primary" onClick={() => handleDownloadCertificate(request._id)}>
+                <Download size={16} />
+                <span>Download Certificate PDF</span>
+              </button>
+              <button className="btn btn-secondary" onClick={() => handleAction('close')}>
+                Close & Archive Request
+              </button>
+            </div>
           </div>
         )}
 
         {request.status === 'closed' && (
-          <p>
-            ✅ <strong>Archived:</strong> This request was closed on{' '}
-            {request.closedAt ? new Date(request.closedAt).toLocaleDateString() : 'N/A'}.
-          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+            <p style={{ margin: 0 }}>
+              ✅ <strong>Archived:</strong> This request was closed on{' '}
+              {request.closedAt ? new Date(request.closedAt).toLocaleDateString() : 'N/A'}.
+            </p>
+            <div>
+              <button className="btn btn-primary btn-sm" onClick={() => handleDownloadCertificate(request._id)}>
+                <Download size={14} />
+                <span>Download Certificate PDF</span>
+              </button>
+            </div>
+          </div>
         )}
       </div>
 

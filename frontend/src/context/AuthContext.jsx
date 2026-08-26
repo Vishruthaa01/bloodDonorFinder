@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
             const data = await res.json();
             setUser(data);
             setRole(data.role);
-            setPage(data.role === 'admin' ? 'admin-dashboard' : (data.role === 'donor' ? 'donor-dashboard' : 'hospital-dashboard'));
+            setPage(data.role === 'donor' ? 'donor-dashboard' : 'hospital-dashboard');
           } else {
             logout();
           }
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
       setToken(data.token);
       setUser(data);
       setRole(data.role);
-      setPage(data.role === 'admin' ? 'admin-dashboard' : (data.role === 'donor' ? 'donor-dashboard' : 'hospital-dashboard'));
+      setPage(data.role === 'donor' ? 'donor-dashboard' : 'hospital-dashboard');
       return { success: true };
     } catch (error) {
       return { success: false, message: error.message };

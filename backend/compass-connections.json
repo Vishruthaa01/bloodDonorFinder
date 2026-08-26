@@ -1,0 +1,24 @@
+{
+  "type": "Compass Connections",
+  "version": {
+    "$numberInt": "1"
+  },
+  "connections": [
+    {
+      "id": "15bdc372-1dc7-4283-87ab-3a4751c1e852",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1787634983751"
+        }
+      },
+      "favorite": {
+        "name": "bloodDonorFinder"
+      },
+      "savedConnectionType": "recent",
+      "connectionOptions": {
+        "connectionString": "mongodb://localhost:27017/",
+        "oidc": {}
+      }
+    }
+  ]
+}

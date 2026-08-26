@@ -31,6 +31,18 @@ const matchAndNotifyNextDonor = async (requestId) => {
       return { success: false, message: 'Hospital data missing' };
     }
 
+    const countPending = request.matchedDonors.filter(m => m.response === 'pending').length;
+    const countAccepted = request.matchedDonors.filter(m => m.response === 'accepted').length;
+
+    // Determine how many additional donors to notify simultaneously
+    // For requests > 1 unit, we notify multiple donors (up to unitsNeeded) simultaneously
+    const unitsToFulfill = Math.max(1, request.unitsNeeded || 1);
+    const neededDonorsCount = unitsToFulfill - countAccepted - countPending;
+
+    if (neededDonorsCount <= 0) {
+      return { success: true, message: 'Sufficient donors already notified or accepted' };
+    }
+
     const attemptedDonorIds = request.matchedDonors.map(m => m.donorId);
     const compatibleGroups = getCompatibleBloodGroups(request.bloodGroup);
     const maxDistanceMeters = request.radiusKm * 1000;
@@ -59,7 +71,7 @@ const matchAndNotifyNextDonor = async (requestId) => {
           $maxDistance: maxDistanceMeters
         }
       }
-    }).limit(1);
+    }).limit(neededDonorsCount);
 
     if (nearbyDonors.length === 0) {
       const maxRadius = 100;
@@ -68,7 +80,7 @@ const matchAndNotifyNextDonor = async (requestId) => {
         request.radiusKm = nextRadius;
         request.statusHistory.push({
           status: 'searching',
-          note: `No donors found in initial radius. Expanding search radius to ${nextRadius} km.`
+          note: `No available compatible donors in initial radius. Expanding search radius to ${nextRadius} km.`
         });
         await request.save();
 
@@ -88,7 +100,7 @@ const matchAndNotifyNextDonor = async (requestId) => {
       
       request.statusHistory.push({
         status: 'searching',
-        note: 'Matching engine: No compatible available donors found within 30 km maximum range.'
+        note: `Matching engine: No compatible available donors found within ${maxRadius} km maximum range.`
       });
       await request.save();
 
@@ -102,70 +114,84 @@ const matchAndNotifyNextDonor = async (requestId) => {
       return { success: false, message: 'No more donors found' };
     }
 
-    const nextDonor = nearbyDonors[0];
+    const newlyNotifiedNames = [];
+    for (const nextDonor of nearbyDonors) {
+      request.matchedDonors.push({
+        donorId: nextDonor._id,
+        notifiedAt: new Date(),
+        response: 'pending',
+        eligibility: 'pending'
+      });
+      newlyNotifiedNames.push(nextDonor.name);
 
-    request.matchedDonors.push({
-      donorId: nextDonor._id,
-      notifiedAt: new Date(),
-      response: 'pending',
-      eligibility: 'pending'
+      const notificationMsg = `Urgent: Blood request for ${request.bloodGroup} at ${request.hospitalId.name}. Units needed: ${request.unitsNeeded}`;
+      const notification = await Notification.create({
+        requestId: request._id,
+        donorId: nextDonor._id,
+        message: notificationMsg,
+        status: 'sent'
+      });
+
+      notifyService.notifyDonor(nextDonor._id.toString(), {
+        notificationId: notification._id,
+        requestId: request._id,
+        hospitalName: request.hospitalId.name,
+        hospitalCoords: hospitalCoords,
+        bloodGroup: request.bloodGroup,
+        unitsNeeded: request.unitsNeeded,
+        urgency: request.urgency,
+        message: notificationMsg
+      });
+
+      // 45s timeout per notified donor
+      setTimeout(async () => {
+        try {
+          const freshRequest = await BloodRequest.findById(requestId);
+          if (!freshRequest) return;
+
+          const donorEntry = freshRequest.matchedDonors.find(
+            d => d.donorId.toString() === nextDonor._id.toString()
+          );
+
+          if (donorEntry && donorEntry.response === 'pending' && freshRequest.status === 'searching') {
+            donorEntry.response = 'rejected';
+            freshRequest.statusHistory.push({
+              status: 'searching',
+              note: `Donor ${nextDonor.name} timed out. Resuming search for remaining units.`
+            });
+            await freshRequest.save();
+
+            console.log(`Donor ${nextDonor.name} timed out for request ${requestId}. Attempting next donor...`);
+            
+            notifyService.notifyHospital(freshRequest.hospitalId.toString(), {
+              type: 'REQUEST_UPDATED',
+              requestId: freshRequest._id,
+              status: freshRequest.status
+            });
+
+            await matchAndNotifyNextDonor(requestId);
+          }
+        } catch (err) {
+          console.error('Error in timeout job:', err);
+        }
+      }, 45000);
+    }
+
+    request.statusHistory.push({
+      status: 'searching',
+      note: `Notified ${nearbyDonors.length} donor(s) (${newlyNotifiedNames.join(', ')}) simultaneously for ${request.unitsNeeded} unit(s) requirement.`
     });
 
     await request.save();
 
-    const notificationMsg = `Urgent: Blood request for ${request.bloodGroup} at ${request.hospitalId.name}. Units: ${request.unitsNeeded}`;
-    const notification = await Notification.create({
+    notifyService.notifyHospital(request.hospitalId._id.toString(), {
+      type: 'REQUEST_UPDATED',
       requestId: request._id,
-      donorId: nextDonor._id,
-      message: notificationMsg,
-      status: 'sent'
+      status: request.status,
+      message: `Notified ${nearbyDonors.length} donor(s) simultaneously.`
     });
 
-    notifyService.notifyDonor(nextDonor._id.toString(), {
-      notificationId: notification._id,
-      requestId: request._id,
-      hospitalName: request.hospitalId.name,
-      hospitalCoords: hospitalCoords,
-      bloodGroup: request.bloodGroup,
-      unitsNeeded: request.unitsNeeded,
-      urgency: request.urgency,
-      message: notificationMsg
-    });
-
-    // Timeout: 45 seconds (45000ms) to auto-reject for easier development testing
-    setTimeout(async () => {
-      try {
-        const freshRequest = await BloodRequest.findById(requestId);
-        if (!freshRequest) return;
-
-        const donorEntry = freshRequest.matchedDonors.find(
-          d => d.donorId.toString() === nextDonor._id.toString()
-        );
-
-        if (donorEntry && donorEntry.response === 'pending' && freshRequest.status === 'searching') {
-          donorEntry.response = 'rejected';
-          freshRequest.statusHistory.push({
-            status: 'searching',
-            note: `Donor ${nextDonor.name} timed out. Resuming search.`
-          });
-          await freshRequest.save();
-
-          console.log(`Donor ${nextDonor.name} timed out. Attempting next donor...`);
-          
-          notifyService.notifyHospital(freshRequest.hospitalId.toString(), {
-            type: 'REQUEST_UPDATED',
-            requestId: freshRequest._id,
-            status: freshRequest.status
-          });
-
-          await matchAndNotifyNextDonor(requestId);
-        }
-      } catch (err) {
-        console.error('Error in timeout job:', err);
-      }
-    }, 45000);
-
-    return { success: true, donor: nextDonor };
+    return { success: true, countNotified: nearbyDonors.length, donors: nearbyDonors };
   } catch (error) {
     console.error('Matching service error:', error);
     return { success: false, error: error.message };

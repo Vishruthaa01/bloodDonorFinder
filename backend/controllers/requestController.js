@@ -1,6 +1,7 @@
 const BloodRequest = require('../models/BloodRequest');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
+const PDFDocument = require('pdfkit');
 const { matchAndNotifyNextDonor } = require('../services/matchingService');
 const notifyService = require('../services/notifyService');
 
@@ -17,7 +18,7 @@ exports.createRequest = async (req, res) => {
       bloodGroup,
       unitsNeeded: parseInt(unitsNeeded),
       urgency,
-      radiusKm: parseFloat(radiusKm || 10),
+      radiusKm: Math.max(1, parseFloat(radiusKm) || 10),
       status: 'searching',
       statusHistory: [{ status: 'searching', note: 'Blood request raised by hospital.' }]
     });
@@ -375,3 +376,181 @@ exports.getNotifications = async (req, res) => {
     res.status(500).json({ message: 'Server error fetching notifications' });
   }
 };
+
+exports.generateCertificate = async (req, res) => {
+  try {
+    const requestId = req.params.id;
+
+    if (!requestId || !requestId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: 'Invalid donation ID format' });
+    }
+
+    const request = await BloodRequest.findById(requestId)
+      .populate('hospitalId', 'name address phone contactPerson')
+      .populate('acceptedDonorId', 'name bloodGroup phone email');
+
+    if (!request) {
+      return res.status(404).json({ message: 'Donation record not found' });
+    }
+
+    let donorName = request.acceptedDonorId?.name;
+    let bloodGroup = request.bloodGroup || request.acceptedDonorId?.bloodGroup || 'N/A';
+
+    if (!donorName && request.matchedDonors && request.matchedDonors.length > 0) {
+      const acceptedMatch = request.matchedDonors.find(m => m.response === 'accepted') || request.matchedDonors[0];
+      if (acceptedMatch && acceptedMatch.donorId) {
+        const donorUser = await User.findById(acceptedMatch.donorId);
+        if (donorUser) {
+          donorName = donorUser.name;
+          if (bloodGroup === 'N/A') bloodGroup = donorUser.bloodGroup;
+        }
+      }
+    }
+
+    if (!donorName) {
+      donorName = 'Valued Donor';
+    }
+
+    const hospitalName = request.hospitalId?.name || 'Authorized Blood Collection Center';
+    const unitsDonated = `${request.unitsNeeded || 1} Unit(s)`;
+    
+    const donationDateObj = request.closedAt || request.updatedAt || request.createdAt;
+    const donationDate = new Date(donationDateObj).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=Blood_Donation_Certificate_${requestId}.pdf`
+    );
+
+    const doc = new PDFDocument({
+      size: 'A4',
+      layout: 'landscape',
+      margin: 40
+    });
+
+    doc.pipe(res);
+
+    const pageWidth = 841.89;
+    const pageHeight = 595.28;
+
+    // Outer Dark Red Border
+    doc.rect(20, 20, pageWidth - 40, pageHeight - 40)
+       .lineWidth(3)
+       .strokeColor('#be123c')
+       .stroke();
+
+    // Inner Subtle Rose Border
+    doc.rect(28, 28, pageWidth - 56, pageHeight - 56)
+       .lineWidth(1)
+       .strokeColor('#fda4af')
+       .stroke();
+
+    // Header Logo/Name
+    doc.fillColor('#be123c')
+       .fontSize(16)
+       .font('Helvetica-Bold')
+       .text('BLOOD DONOR FINDER', 0, 52, { align: 'center' });
+
+    doc.fillColor('#64748b')
+       .fontSize(10)
+       .font('Helvetica')
+       .text('Emergency Blood Match & Healthcare Network', 0, 72, { align: 'center' });
+
+    // Certificate Title
+    doc.fillColor('#0f172a')
+       .fontSize(30)
+       .font('Helvetica-Bold')
+       .text('Blood Donation Certificate', 0, 108, { align: 'center' });
+
+    // Decorative Line
+    doc.moveTo(pageWidth / 2 - 100, 148)
+       .lineTo(pageWidth / 2 + 100, 148)
+       .lineWidth(2)
+       .strokeColor('#e11d48')
+       .stroke();
+
+    // Presentation text
+    doc.fillColor('#475569')
+       .fontSize(13)
+       .font('Helvetica')
+       .text('This is proudly presented to', 0, 168, { align: 'center' });
+
+    // Donor Name
+    doc.fillColor('#be123c')
+       .fontSize(28)
+       .font('Helvetica-Bold')
+       .text(donorName.toUpperCase(), 0, 198, { align: 'center' });
+
+    // Underline
+    doc.moveTo(220, 235)
+       .lineTo(pageWidth - 220, 235)
+       .lineWidth(1)
+       .strokeColor('#cbd5e1')
+       .stroke();
+
+    // Appreciation Text
+    doc.fillColor('#334155')
+       .fontSize(12)
+       .font('Helvetica')
+       .text('In recognition and heartfelt appreciation of your voluntary life-saving blood donation.', 0, 255, { align: 'center' });
+
+    // Donation Details Box
+    const boxWidth = 620;
+    const boxHeight = 130;
+    const boxX = (pageWidth - boxWidth) / 2;
+    const boxY = 290;
+
+    doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 8)
+       .fillAndStroke('#fff1f2', '#fecdd3');
+
+    const col1X = boxX + 30;
+    const col2X = boxX + 340;
+    let rowY = boxY + 20;
+
+    // Row 1: Hospital Name & Donation Date
+    doc.fillColor('#475569').fontSize(11).font('Helvetica-Bold').text('Donation Center:', col1X, rowY);
+    doc.fillColor('#0f172a').font('Helvetica').text(hospitalName, col1X + 115, rowY, { width: 180 });
+
+    doc.fillColor('#475569').font('Helvetica-Bold').text('Donation Date:', col2X, rowY);
+    doc.fillColor('#0f172a').font('Helvetica').text(donationDate, col2X + 110, rowY);
+
+    // Row 2: Blood Group & Donation ID
+    rowY += 35;
+    doc.fillColor('#475569').font('Helvetica-Bold').text('Blood Group:', col1X, rowY);
+    doc.fillColor('#be123c').font('Helvetica-Bold').fontSize(13).text(bloodGroup, col1X + 115, rowY - 1);
+
+    doc.fillColor('#475569').font('Helvetica-Bold').fontSize(11).text('Donation ID:', col2X, rowY);
+    doc.fillColor('#0f172a').font('Helvetica').text(requestId.toString(), col2X + 110, rowY);
+
+    // Row 3: Units Donated
+    rowY += 35;
+    doc.fillColor('#475569').font('Helvetica-Bold').text('Units Donated:', col1X, rowY);
+    doc.fillColor('#0f172a').font('Helvetica').text(unitsDonated, col1X + 115, rowY);
+
+    // Short Thank-You Message
+    doc.fillColor('#1e293b')
+       .fontSize(12)
+       .font('Helvetica-Oblique')
+       .text('"Thank you for your noble contribution. Your blood donation brings hope and saves precious lives in urgent medical need."', 0, 445, { align: 'center' });
+
+    // Footer
+    doc.fillColor('#94a3b8')
+       .fontSize(9)
+       .font('Helvetica')
+       .text(`Verified Electronic Record • Blood Donor Finder System ID: ${requestId}`, 0, 525, { align: 'center' });
+
+    doc.end();
+
+  } catch (error) {
+    console.error('Error generating certificate PDF:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ message: 'Server error generating donation certificate' });
+    }
+  }
+};
+
