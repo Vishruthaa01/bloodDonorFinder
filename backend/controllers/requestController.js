@@ -146,12 +146,26 @@ exports.respondToRequest = async (req, res) => {
         }
       }
 
-      request.status = 'donor_found';
-      request.acceptedDonorId = req.user._id;
-      request.statusHistory.push({
-        status: 'donor_found',
-        note: `Request accepted by donor ${req.user.name}`
-      });
+      const countAccepted = request.matchedDonors.filter(m => m.response === 'accepted').length;
+      const targetUnits = request.unitsNeeded || 1;
+
+      if (countAccepted >= targetUnits) {
+        request.status = 'donor_found';
+        request.statusHistory.push({
+          status: 'donor_found',
+          note: `All ${targetUnits} required donor(s) accepted (1 unit each). Total accepted: ${countAccepted}`
+        });
+      } else {
+        request.status = 'searching';
+        request.statusHistory.push({
+          status: 'searching',
+          note: `Donor ${req.user.name} accepted 1 unit. ${countAccepted} of ${targetUnits} unit(s) fulfilled. Continuing search for remaining donors.`
+        });
+      }
+
+      if (!request.acceptedDonorId) {
+        request.acceptedDonorId = req.user._id;
+      }
 
       // Update notification status to responded
       await Notification.updateOne(
@@ -177,13 +191,14 @@ exports.respondToRequest = async (req, res) => {
       type: 'REQUEST_UPDATED',
       requestId: request._id,
       status: request.status,
-      message: `Donor ${req.user.name} has ${response} the request.`
+      message: `Donor ${req.user.name} has ${response} 1 unit for the request.`
     });
 
-    res.json({ message: `Successfully ${response} the request`, status: request.status });
+    res.json({ message: `Successfully ${response} 1 unit for the request`, status: request.status });
 
-    // If rejected, trigger search for the next donor
-    if (response === 'rejected') {
+    // If more donors are still needed, trigger search for next available donor
+    const currentAccepted = request.matchedDonors.filter(m => m.response === 'accepted').length;
+    if (response === 'rejected' || currentAccepted < (request.unitsNeeded || 1)) {
       matchAndNotifyNextDonor(request._id);
     }
   } catch (error) {
@@ -412,7 +427,7 @@ exports.generateCertificate = async (req, res) => {
     }
 
     const hospitalName = request.hospitalId?.name || 'Authorized Blood Collection Center';
-    const unitsDonated = `${request.unitsNeeded || 1} Unit(s)`;
+    const unitsDonated = '1 Unit';
     
     const donationDateObj = request.closedAt || request.updatedAt || request.createdAt;
     const donationDate = new Date(donationDateObj).toLocaleDateString('en-US', {
