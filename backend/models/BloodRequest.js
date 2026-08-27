@@ -17,7 +17,9 @@ const MatchedDonorSchema = new mongoose.Schema({
     type: String,
     enum: ['accepted', 'confirmed', 'in_progress', 'completed'],
     default: 'accepted'
-  }
+  },
+  contactConfirmed: { type: Boolean, default: false },
+  donationCompleted: { type: Boolean, default: false }
 }, { _id: false });
 
 const StatusHistorySchema = new mongoose.Schema({

@@ -315,6 +315,7 @@ exports.confirmContact = async (req, res) => {
     );
     if (donorMatch) {
       donorMatch.status = 'in_progress';
+      donorMatch.contactConfirmed = true;
     }
 
     request.status = 'in_progress';
@@ -366,10 +367,11 @@ exports.completeRequest = async (req, res) => {
     );
     if (donorMatch) {
       donorMatch.status = 'completed';
+      donorMatch.donationCompleted = true;
     }
 
     const acceptedMatches = request.matchedDonors.filter(m => m.response === 'accepted');
-    const allCompleted = acceptedMatches.length > 0 && acceptedMatches.every(m => m.status === 'completed');
+    const allCompleted = acceptedMatches.length > 0 && acceptedMatches.every(m => m.donationCompleted || m.status === 'completed');
 
     if (allCompleted) {
       request.status = 'completed';

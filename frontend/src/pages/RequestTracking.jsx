@@ -218,10 +218,13 @@ export const RequestTracking = () => {
               const donorIdStr = typeof donor === 'object' ? (donor._id || donor).toString() : donor.toString();
               const isEligible = m.eligibility === 'eligible';
               const isPending = !m.eligibility || m.eligibility === 'pending';
-              const donorStatus = m.status || (request.status === 'completed' || request.status === 'closed' ? 'completed' : request.status === 'in_progress' ? 'in_progress' : isEligible ? 'confirmed' : 'accepted');
+              
+              const isStep4 = m.donationCompleted || m.status === 'completed';
+              const isStep3 = isEligible && !isStep4 && (m.contactConfirmed || m.status === 'in_progress');
+              const isStep2 = isEligible && !isStep4 && !isStep3;
 
               return (
-                <div key={idx} className="card" style={{ padding: '16px', borderLeft: `5px solid ${donorStatus === 'completed' ? 'var(--success)' : isEligible ? '#3b82f6' : 'var(--primary)'}`, backgroundColor: '#fafafa' }}>
+                <div key={idx} className="card" style={{ padding: '16px', borderLeft: `5px solid ${isStep4 ? 'var(--success)' : isEligible ? '#3b82f6' : 'var(--primary)'}`, backgroundColor: '#fafafa' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                       <div style={{ backgroundColor: '#fee2e2', color: 'var(--primary)', padding: '10px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -238,8 +241,8 @@ export const RequestTracking = () => {
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span className={`badge badge-${donorStatus === 'completed' ? 'completed' : isEligible ? 'confirmed' : m.eligibility === 'not_eligible' ? 'closed' : 'searching'}`} style={{ fontSize: '0.85rem', padding: '6px 12px' }}>
-                        {donorStatus === 'completed' ? 'DONATION COMPLETED' : `ELIGIBILITY: ${m.eligibility ? m.eligibility.toUpperCase() : 'PENDING'}`}
+                      <span className={`badge badge-${isStep4 ? 'completed' : isEligible ? 'confirmed' : m.eligibility === 'not_eligible' ? 'closed' : 'searching'}`} style={{ fontSize: '0.85rem', padding: '6px 12px' }}>
+                        {isStep4 ? 'DONATION COMPLETED' : `ELIGIBILITY: ${m.eligibility ? m.eligibility.toUpperCase() : 'PENDING'}`}
                       </span>
                     </div>
                   </div>
@@ -273,8 +276,8 @@ export const RequestTracking = () => {
                       </div>
                     )}
 
-                    {/* Step 2: Contact & Dispatch (Eligible & Confirmed) */}
-                    {isEligible && (donorStatus === 'accepted' || donorStatus === 'confirmed') && (
+                    {/* Step 2: Contact & Dispatch (Eligible & Contact Pending) */}
+                    {isStep2 && (
                       <div>
                         <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
                           📞 <strong>Step 2: Contact & Dispatch</strong> — Contact <strong>{donor?.name}</strong> at <strong>{donor?.phone}</strong> to coordinate ETA and travel.
@@ -290,8 +293,8 @@ export const RequestTracking = () => {
                       </div>
                     )}
 
-                    {/* Step 3: Donation Collection (In Progress) */}
-                    {isEligible && donorStatus === 'in_progress' && (
+                    {/* Step 3: Donation Collection (Contact Confirmed / In Progress) */}
+                    {isStep3 && (
                       <div>
                         <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
                           💉 <strong>Step 3: Donation Collection</strong> — <strong>{donor?.name}</strong> is at hospital. Collect blood and log completion.
@@ -308,7 +311,7 @@ export const RequestTracking = () => {
                     )}
 
                     {/* Step 4: Completed */}
-                    {donorStatus === 'completed' && (
+                    {isStep4 && (
                       <div style={{ fontSize: '0.875rem', color: 'var(--success)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <CheckCircle size={16} />
                         <span>Step 4: Donation Finished & Logged for {donor?.name}</span>
