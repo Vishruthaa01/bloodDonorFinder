@@ -215,7 +215,7 @@ export const RequestTracking = () => {
 
             {request.matchedDonors.filter(m => m.response === 'accepted').map((m, idx) => {
               const donor = m.donorId;
-              const donorIdStr = donor?._id || donor;
+              const donorIdStr = typeof donor === 'object' ? (donor._id || donor).toString() : donor.toString();
               const isEligible = m.eligibility === 'eligible';
               const isPending = !m.eligibility || m.eligibility === 'pending';
               const donorStatus = m.status || (isEligible ? 'confirmed' : 'accepted');

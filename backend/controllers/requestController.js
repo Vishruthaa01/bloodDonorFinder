@@ -207,6 +207,13 @@ exports.respondToRequest = async (req, res) => {
   }
 };
 
+const getDonorIdString = (id) => {
+  if (!id) return '';
+  if (typeof id === 'string') return id;
+  if (id._id) return id._id.toString();
+  return id.toString();
+};
+
 exports.checkEligibility = async (req, res) => {
   try {
     if (req.userRole !== 'hospital') {
@@ -223,16 +230,16 @@ exports.checkEligibility = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    const targetDonorId = donorId || request.acceptedDonorId;
-    if (!targetDonorId) {
+    const targetDonorIdStr = getDonorIdString(donorId || request.acceptedDonorId);
+    if (!targetDonorIdStr) {
       return res.status(400).json({ message: 'No donor specified for eligibility check' });
     }
 
     const donorMatch = request.matchedDonors.find(
-      m => m && m.donorId && (m.donorId._id || m.donorId).toString() === targetDonorId.toString()
+      m => m && m.donorId && getDonorIdString(m.donorId) === targetDonorIdStr
     );
 
-    const donorUser = await User.findById(targetDonorId);
+    const donorUser = await User.findById(targetDonorIdStr);
     const donorName = donorUser ? donorUser.name : 'Donor';
 
     if (donorMatch) {
@@ -252,7 +259,7 @@ exports.checkEligibility = async (req, res) => {
       if (donorMatch) {
         donorMatch.response = 'rejected';
       }
-      if (request.acceptedDonorId && request.acceptedDonorId.toString() === targetDonorId.toString()) {
+      if (request.acceptedDonorId && getDonorIdString(request.acceptedDonorId) === targetDonorIdStr) {
         request.acceptedDonorId = null;
       }
       request.status = 'searching';
@@ -262,7 +269,7 @@ exports.checkEligibility = async (req, res) => {
       });
 
       // Notify the released donor
-      notifyService.notifyDonor(targetDonorId.toString(), {
+      notifyService.notifyDonor(targetDonorIdStr, {
         type: 'ELIGIBILITY_FAILED',
         requestId: request._id,
         message: 'You have been marked not eligible for this donation request.'
@@ -301,10 +308,10 @@ exports.confirmContact = async (req, res) => {
     }
 
     const { donorId } = req.body;
-    const targetDonorId = donorId || request.acceptedDonorId;
+    const targetDonorIdStr = getDonorIdString(donorId || request.acceptedDonorId);
 
     const donorMatch = request.matchedDonors.find(
-      m => m && m.donorId && (m.donorId._id || m.donorId).toString() === targetDonorId.toString()
+      m => m && m.donorId && getDonorIdString(m.donorId) === targetDonorIdStr
     );
     if (donorMatch) {
       donorMatch.status = 'in_progress';
@@ -325,8 +332,8 @@ exports.confirmContact = async (req, res) => {
       status: request.status
     });
 
-    if (targetDonorId) {
-      notifyService.notifyDonor(targetDonorId.toString(), {
+    if (targetDonorIdStr) {
+      notifyService.notifyDonor(targetDonorIdStr, {
         type: 'CONTACT_CONFIRMED',
         requestId: request._id,
         message: 'Hospital has confirmed contact. Please coordinate your arrival.'
@@ -352,10 +359,10 @@ exports.completeRequest = async (req, res) => {
     }
 
     const { donorId } = req.body;
-    const targetDonorId = donorId || request.acceptedDonorId;
+    const targetDonorIdStr = getDonorIdString(donorId || request.acceptedDonorId);
 
     const donorMatch = request.matchedDonors.find(
-      m => m && m.donorId && (m.donorId._id || m.donorId).toString() === targetDonorId.toString()
+      m => m && m.donorId && getDonorIdString(m.donorId) === targetDonorIdStr
     );
     if (donorMatch) {
       donorMatch.status = 'completed';
@@ -382,12 +389,12 @@ exports.completeRequest = async (req, res) => {
       status: request.status
     });
 
-    if (targetDonorId) {
-      await User.findByIdAndUpdate(targetDonorId, {
+    if (targetDonorIdStr) {
+      await User.findByIdAndUpdate(targetDonorIdStr, {
         lastDonationDate: new Date(),
       });
 
-      notifyService.notifyDonor(targetDonorId.toString(), {
+      notifyService.notifyDonor(targetDonorIdStr, {
         type: 'DONATION_COMPLETED',
         requestId: request._id,
         message: 'Thank you for your life-saving blood donation! Your certificate is now available on your dashboard.'
