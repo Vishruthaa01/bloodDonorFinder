@@ -10,6 +10,8 @@ try {
 dotenv.config();
 const User = require('./models/User');
 const Hospital = require('./models/Hospital');
+const BloodRequest = require('./models/BloodRequest');
+const Notification = require('./models/Notification');
 
 const usersToCreate = [
   {
@@ -240,9 +242,11 @@ const seedDatabase = async () => {
   try {
     await connect();
 
-    console.log('Deleting existing users and hospitals...');
+    console.log('Deleting existing users, hospitals, blood requests, and notifications...');
     await User.deleteMany({});
     await Hospital.deleteMany({});
+    await BloodRequest.deleteMany({});
+    await Notification.deleteMany({});
 
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash('password123', salt);
