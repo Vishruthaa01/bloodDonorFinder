@@ -218,7 +218,7 @@ export const RequestTracking = () => {
               const donorIdStr = typeof donor === 'object' ? (donor._id || donor).toString() : donor.toString();
               const isEligible = m.eligibility === 'eligible';
               const isPending = !m.eligibility || m.eligibility === 'pending';
-              const donorStatus = m.status || (isEligible ? 'confirmed' : 'accepted');
+              const donorStatus = m.status || (request.status === 'completed' || request.status === 'closed' ? 'completed' : request.status === 'in_progress' ? 'in_progress' : isEligible ? 'confirmed' : 'accepted');
 
               return (
                 <div key={idx} className="card" style={{ padding: '16px', borderLeft: `5px solid ${donorStatus === 'completed' ? 'var(--success)' : isEligible ? '#3b82f6' : 'var(--primary)'}`, backgroundColor: '#fafafa' }}>
