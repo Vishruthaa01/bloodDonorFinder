@@ -1,0 +1,25 @@
+services:
+  # Backend Web Service (Express + Socket.IO)
+  - type: web
+    name: blood-donor-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  # Frontend Static Site (React / Vite)
+  - type: web
+    name: blood-donor-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
