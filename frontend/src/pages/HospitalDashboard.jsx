@@ -396,6 +396,8 @@ export const HospitalDashboard = () => {
             )}
           </div>
         </div>
+      )}
+
       {/* Accepted Donors & Confirmations View */}
       {activeTab === 'accepted' && (
         <div className="card">
