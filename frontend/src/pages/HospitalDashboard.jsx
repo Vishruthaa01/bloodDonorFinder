@@ -188,7 +188,7 @@ export const HospitalDashboard = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', gap: '12px' }}>
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', gap: '12px', flexWrap: 'wrap' }}>
         <button
           onClick={() => setActiveTab('map')}
           style={{
@@ -208,6 +208,24 @@ export const HospitalDashboard = () => {
           <span>Available Donors Map ({availableCount} Available)</span>
         </button>
         <button
+          onClick={() => setActiveTab('accepted')}
+          style={{
+            padding: '12px 20px',
+            background: 'none',
+            border: 'none',
+            borderBottom: activeTab === 'accepted' ? '3px solid var(--primary)' : '3px solid transparent',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            color: activeTab === 'accepted' ? 'var(--primary)' : 'var(--text-secondary)'
+          }}
+        >
+          <Users size={18} />
+          <span>Accepted Donors & Confirmations ({requests.filter(r => r.acceptedDonorId || r.status !== 'searching').length})</span>
+        </button>
+        <button
           onClick={() => setActiveTab('requests')}
           style={{
             padding: '12px 20px',
@@ -223,7 +241,7 @@ export const HospitalDashboard = () => {
           }}
         >
           <Award size={18} />
-          <span>Blood Requests ({requests.length})</span>
+          <span>All Blood Requests ({requests.length})</span>
         </button>
       </div>
 
@@ -377,6 +395,104 @@ export const HospitalDashboard = () => {
               </div>
             )}
           </div>
+        </div>
+      {/* Accepted Donors & Confirmations View */}
+      {activeTab === 'accepted' && (
+        <div className="card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div>
+              <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Users size={20} style={{ color: 'var(--primary)' }} />
+                Accepted Donors & Confirmation Queue
+              </h3>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                Donors who have accepted your emergency blood requests. Verify eligibility, confirm contact, complete donations, and download certificates.
+              </p>
+            </div>
+          </div>
+
+          {loading ? (
+            <div>Loading accepted donor records...</div>
+          ) : requests.filter(r => r.acceptedDonorId || r.status !== 'searching').length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)' }}>
+              <Users size={48} style={{ opacity: 0.2, marginBottom: '12px', color: 'var(--primary)' }} />
+              <p>No accepted donor responses yet. Raise a request or wait for nearby donors to accept.</p>
+            </div>
+          ) : (
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
+                <thead>
+                  <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left' }}>
+                    <th style={{ padding: '12px' }}>Accepted Donor</th>
+                    <th style={{ padding: '12px' }}>Blood Group</th>
+                    <th style={{ padding: '12px' }}>Units</th>
+                    <th style={{ padding: '12px' }}>Urgency</th>
+                    <th style={{ padding: '12px' }}>Progress Status</th>
+                    <th style={{ padding: '12px' }}>Confirmations & Actions</th>
+                    <th style={{ padding: '12px' }}>Certificate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {requests.filter(r => r.acceptedDonorId || r.status !== 'searching').map((req) => {
+                    const donor = req.acceptedDonorId;
+                    return (
+                      <tr key={req._id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                        <td style={{ padding: '12px' }}>
+                          {donor ? (
+                            <div>
+                              <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{donor.name}</div>
+                              <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <Phone size={12} />
+                                <span>{donor.phone}</span>
+                              </div>
+                            </div>
+                          ) : (
+                            <span style={{ fontStyle: 'italic', color: 'var(--text-muted)' }}>Donor Matched</span>
+                          )}
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <span style={{ backgroundColor: '#ffe4e6', color: '#e11d48', fontWeight: 700, padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem' }}>
+                            {req.bloodGroup}
+                          </span>
+                        </td>
+                        <td style={{ padding: '12px' }}>{req.unitsNeeded} unit(s)</td>
+                        <td style={{ padding: '12px' }}>
+                          <span className={`badge badge-urgency-${req.urgency?.toLowerCase()}`}>{req.urgency}</span>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <span className={`badge badge-${req.status}`}>{req.status}</span>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <button
+                            className="btn btn-primary btn-sm"
+                            onClick={() => handleTrackRequest(req._id)}
+                            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                          >
+                            <Eye size={14} />
+                            <span>Confirm & Manage Step</span>
+                          </button>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          {(req.status === 'completed' || req.status === 'closed') ? (
+                            <button
+                              className="btn btn-secondary btn-sm"
+                              onClick={() => handleDownloadCertificate(req._id)}
+                              style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', padding: '6px 10px' }}
+                            >
+                              <Download size={14} />
+                              <span>Download PDF</span>
+                            </button>
+                          ) : (
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Available on Completion</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
 
