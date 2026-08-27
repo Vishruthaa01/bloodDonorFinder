@@ -46,7 +46,13 @@ export const AuthProvider = ({ children }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-      const data = await res.json();
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        throw new Error(`Cannot connect to backend API (${res.status} ${res.statusText}). Please check VITE_API_URL in Vercel.`);
+      }
       if (!res.ok) throw new Error(data.message || 'Login failed');
 
       localStorage.setItem('token', data.token);
