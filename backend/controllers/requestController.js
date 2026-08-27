@@ -213,7 +213,7 @@ exports.checkEligibility = async (req, res) => {
       return res.status(403).json({ message: 'Only hospitals can check eligibility' });
     }
 
-    const { eligibility } = req.body; // 'eligible' or 'not_eligible'
+    const { eligibility, donorId } = req.body; // 'eligible' or 'not_eligible'
     if (!['eligible', 'not_eligible'].includes(eligibility)) {
       return res.status(400).json({ message: 'Invalid eligibility status' });
     }
@@ -223,32 +223,43 @@ exports.checkEligibility = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
+    const targetDonorId = donorId || request.acceptedDonorId;
+    if (!targetDonorId) {
+      return res.status(400).json({ message: 'No donor specified for eligibility check' });
+    }
+
     const donorMatch = request.matchedDonors.find(
-      m => m && m.donorId && request.acceptedDonorId && m.donorId.toString() === request.acceptedDonorId.toString()
+      m => m && m.donorId && (m.donorId._id || m.donorId).toString() === targetDonorId.toString()
     );
 
     if (donorMatch) {
       donorMatch.eligibility = eligibility;
     }
 
+    const donorUser = await User.findById(targetDonorId);
+    const donorName = donorUser ? donorUser.name : 'Donor';
+
     if (eligibility === 'eligible') {
       request.status = 'confirmed';
       request.statusHistory.push({
         status: 'confirmed',
-        note: 'Donor marked eligible after screening.'
+        note: `Donor ${donorName} marked eligible after screening.`
       });
     } else {
-      // Release this donor and search for another
-      const previousDonorId = request.acceptedDonorId;
+      if (donorMatch) {
+        donorMatch.response = 'rejected';
+      }
+      if (request.acceptedDonorId && request.acceptedDonorId.toString() === targetDonorId.toString()) {
+        request.acceptedDonorId = null;
+      }
       request.status = 'searching';
-      request.acceptedDonorId = null;
       request.statusHistory.push({
         status: 'searching',
-        note: 'Donor marked not eligible. Resuming search.'
+        note: `Donor ${donorName} marked not eligible. Resuming search for remaining units.`
       });
 
       // Notify the released donor
-      notifyService.notifyDonor(previousDonorId.toString(), {
+      notifyService.notifyDonor(targetDonorId.toString(), {
         type: 'ELIGIBILITY_FAILED',
         requestId: request._id,
         message: 'You have been marked not eligible for this donation request.'
@@ -263,9 +274,8 @@ exports.checkEligibility = async (req, res) => {
       status: request.status
     });
 
-    res.json({ message: `Eligibility marked: ${eligibility}`, status: request.status });
+    res.json({ message: `Eligibility marked for ${donorName}: ${eligibility}`, status: request.status });
 
-    // If marked not eligible, match the next donor
     if (eligibility === 'not_eligible') {
       matchAndNotifyNextDonor(request._id);
     }
@@ -286,6 +296,9 @@ exports.confirmContact = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
+    const { donorId } = req.body;
+    const targetDonorId = donorId || request.acceptedDonorId;
+
     request.status = 'in_progress';
     request.statusHistory.push({
       status: 'in_progress',
@@ -294,9 +307,8 @@ exports.confirmContact = async (req, res) => {
 
     await request.save();
 
-    // Notify donor about progress
-    if (request.acceptedDonorId) {
-      notifyService.notifyDonor(request.acceptedDonorId.toString(), {
+    if (targetDonorId) {
+      notifyService.notifyDonor(targetDonorId.toString(), {
         type: 'CONTACT_CONFIRMED',
         requestId: request._id,
         message: 'Hospital has confirmed contact. Please coordinate your arrival.'
@@ -321,6 +333,9 @@ exports.completeRequest = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
+    const { donorId } = req.body;
+    const targetDonorId = donorId || request.acceptedDonorId;
+
     request.status = 'completed';
     request.statusHistory.push({
       status: 'completed',
@@ -329,21 +344,19 @@ exports.completeRequest = async (req, res) => {
 
     await request.save();
 
-    // Update donor's history and last donation date
-    if (request.acceptedDonorId) {
-      await User.findByIdAndUpdate(request.acceptedDonorId, {
+    if (targetDonorId) {
+      await User.findByIdAndUpdate(targetDonorId, {
         lastDonationDate: new Date(),
-        // optional: set temporarily unavailable or let them toggle
       });
 
-      notifyService.notifyDonor(request.acceptedDonorId.toString(), {
+      notifyService.notifyDonor(targetDonorId.toString(), {
         type: 'DONATION_COMPLETED',
         requestId: request._id,
-        message: 'Thank you for your life-saving blood donation!'
+        message: 'Thank you for your life-saving blood donation! Your certificate is now available on your dashboard.'
       });
     }
 
-    res.json({ message: 'Request completed', status: request.status });
+    res.json({ message: 'Request completed successfully', status: request.status });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error completing request' });

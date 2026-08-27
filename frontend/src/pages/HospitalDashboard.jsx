@@ -427,70 +427,65 @@ export const HospitalDashboard = () => {
                   <tr style={{ borderBottom: '2px solid var(--border-color)', textAlign: 'left' }}>
                     <th style={{ padding: '12px' }}>Accepted Donor</th>
                     <th style={{ padding: '12px' }}>Blood Group</th>
-                    <th style={{ padding: '12px' }}>Units</th>
+                    <th style={{ padding: '12px' }}>Units Needed</th>
                     <th style={{ padding: '12px' }}>Urgency</th>
+                    <th style={{ padding: '12px' }}>Donor Eligibility</th>
                     <th style={{ padding: '12px' }}>Progress Status</th>
                     <th style={{ padding: '12px' }}>Confirmations & Actions</th>
-                    <th style={{ padding: '12px' }}>Certificate</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {requests.filter(r => r.acceptedDonorId || r.status !== 'searching').map((req) => {
-                    const donor = req.acceptedDonorId;
-                    return (
-                      <tr key={req._id} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                        <td style={{ padding: '12px' }}>
-                          {donor ? (
-                            <div>
-                              <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{donor.name}</div>
-                              <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <Phone size={12} />
-                                <span>{donor.phone}</span>
-                              </div>
-                            </div>
-                          ) : (
-                            <span style={{ fontStyle: 'italic', color: 'var(--text-muted)' }}>Donor Matched</span>
-                          )}
-                        </td>
-                        <td style={{ padding: '12px' }}>
-                          <span style={{ backgroundColor: '#ffe4e6', color: '#e11d48', fontWeight: 700, padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem' }}>
-                            {req.bloodGroup}
-                          </span>
-                        </td>
-                        <td style={{ padding: '12px' }}>{req.unitsNeeded} unit(s)</td>
-                        <td style={{ padding: '12px' }}>
-                          <span className={`badge badge-urgency-${req.urgency?.toLowerCase()}`}>{req.urgency}</span>
-                        </td>
-                        <td style={{ padding: '12px' }}>
-                          <span className={`badge badge-${req.status}`}>{req.status}</span>
-                        </td>
-                        <td style={{ padding: '12px' }}>
-                          <button
-                            className="btn btn-primary btn-sm"
-                            onClick={() => handleTrackRequest(req._id)}
-                            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-                          >
-                            <Eye size={14} />
-                            <span>Confirm & Manage Step</span>
-                          </button>
-                        </td>
-                        <td style={{ padding: '12px' }}>
-                          {(req.status === 'completed' || req.status === 'closed') ? (
-                            <button
-                              className="btn btn-secondary btn-sm"
-                              onClick={() => handleDownloadCertificate(req._id)}
-                              style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', padding: '6px 10px' }}
-                            >
-                              <Download size={14} />
-                              <span>Download PDF</span>
-                            </button>
-                          ) : (
-                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Available on Completion</span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {requests.flatMap(req =>
+                    req.matchedDonors
+                      .filter(m => m.response === 'accepted')
+                      .map((m, idx) => {
+                        const donor = m.donorId;
+                        return (
+                          <tr key={`${req._id}-${idx}`} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                            <td style={{ padding: '12px' }}>
+                              {donor ? (
+                                <div>
+                                  <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{donor.name}</div>
+                                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <Phone size={12} />
+                                    <span>{donor.phone}</span>
+                                  </div>
+                                </div>
+                              ) : (
+                                <span style={{ fontStyle: 'italic', color: 'var(--text-muted)' }}>Donor Matched</span>
+                              )}
+                            </td>
+                            <td style={{ padding: '12px' }}>
+                              <span style={{ backgroundColor: '#ffe4e6', color: '#e11d48', fontWeight: 700, padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem' }}>
+                                {req.bloodGroup}
+                              </span>
+                            </td>
+                            <td style={{ padding: '12px' }}>{req.unitsNeeded} unit(s)</td>
+                            <td style={{ padding: '12px' }}>
+                              <span className={`badge badge-urgency-${req.urgency?.toLowerCase()}`}>{req.urgency}</span>
+                            </td>
+                            <td style={{ padding: '12px' }}>
+                              <span className={`badge badge-${m.eligibility === 'eligible' ? 'confirmed' : m.eligibility === 'not_eligible' ? 'closed' : 'searching'}`}>
+                                {m.eligibility || 'pending'}
+                              </span>
+                            </td>
+                            <td style={{ padding: '12px' }}>
+                              <span className={`badge badge-${req.status}`}>{req.status}</span>
+                            </td>
+                            <td style={{ padding: '12px' }}>
+                              <button
+                                className="btn btn-primary btn-sm"
+                                onClick={() => handleTrackRequest(req._id)}
+                                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                              >
+                                <Eye size={14} />
+                                <span>Confirm & Screen {donor?.name || 'Donor'}</span>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                  )}
                 </tbody>
               </table>
             </div>

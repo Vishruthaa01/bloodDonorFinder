@@ -204,83 +204,106 @@ export const RequestTracking = () => {
           </div>
         )}
 
-        {request.status === 'donor_found' && request.acceptedDonorId && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
-            <div className="card" style={{ backgroundColor: 'var(--secondary)', border: 'none' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ backgroundColor: 'var(--bg-card)', padding: '10px', borderRadius: '50%' }}>
-                  <User size={24} />
-                </div>
-                <div>
-                  <strong>{request.acceptedDonorId.name}</strong> has accepted your request.
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                    Blood Group: {request.acceptedDonorId.bloodGroup} | Contact: {request.acceptedDonorId.phone}
+        {/* Separate Portal Cards for Accepted Donors */}
+        {request.matchedDonors.filter(m => m.response === 'accepted').length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '16px' }}>
+            <h4 style={{ margin: 0, color: 'var(--primary)' }}>
+              Accepted Donors Confirmation Queue ({request.matchedDonors.filter(m => m.response === 'accepted').length} donor(s))
+            </h4>
+
+            {request.matchedDonors.filter(m => m.response === 'accepted').map((m, idx) => {
+              const donor = m.donorId;
+              const donorIdStr = donor?._id || donor;
+              return (
+                <div key={idx} className="card" style={{ backgroundColor: 'var(--secondary)', border: '1px solid var(--border-color)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ backgroundColor: 'var(--bg-card)', padding: '10px', borderRadius: '50%' }}>
+                        <User size={24} />
+                      </div>
+                      <div>
+                        <strong>{donor?.name || 'Accepted Donor'}</strong> has accepted 1 unit.
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                          Blood Group: <strong>{donor?.bloodGroup || request.bloodGroup}</strong> | Phone: <strong>{donor?.phone || 'N/A'}</strong>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className={`badge badge-${m.eligibility === 'eligible' ? 'confirmed' : m.eligibility === 'not_eligible' ? 'closed' : 'searching'}`}>
+                        Eligibility: {m.eligibility || 'pending'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Specific Action Buttons for this Donor */}
+                  <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
+                    {m.eligibility === 'pending' && (
+                      <div>
+                        <p style={{ fontSize: '0.9rem', marginBottom: '8px' }}>
+                          🏥 <strong>Clinical Verification:</strong> Verify physical screening for <strong>{donor?.name}</strong>.
+                        </p>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <button
+                            className="btn btn-primary btn-sm"
+                            onClick={() => handleAction('eligibility', { eligibility: 'eligible', donorId: donorIdStr })}
+                          >
+                            <Check size={14} />
+                            <span>Mark Eligible (Confirm {donor?.name})</span>
+                          </button>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => handleAction('eligibility', { eligibility: 'not_eligible', donorId: donorIdStr })}
+                          >
+                            <X size={14} />
+                            <span>Mark Ineligible</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {m.eligibility === 'eligible' && request.status === 'confirmed' && (
+                      <div>
+                        <p style={{ fontSize: '0.9rem', marginBottom: '8px' }}>
+                          📞 <strong>Contact & Dispatch:</strong> Contact <strong>{donor?.name}</strong> at <strong>{donor?.phone}</strong> to confirm ETA.
+                        </p>
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => handleAction('contact', { donorId: donorIdStr })}
+                        >
+                          Confirm Contact & {donor?.name} Traveling
+                        </button>
+                      </div>
+                    )}
+
+                    {request.status === 'in_progress' && (
+                      <div>
+                        <p style={{ fontSize: '0.9rem', marginBottom: '8px' }}>
+                          💉 <strong>Donation In Progress:</strong> Collect blood from <strong>{donor?.name}</strong>.
+                        </p>
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => handleAction('complete', { donorId: donorIdStr })}
+                        >
+                          Log Donation Completed for {donor?.name}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div>
-              <p>
-                🏥 <strong>Clinical Verification Needed:</strong> Please perform the standard physical screening on the donor. Verify if they are eligible for donation today.
-              </p>
-              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleAction('eligibility', { eligibility: 'eligible' })}
-                >
-                  <Check size={16} />
-                  <span>Mark Eligible (Confirm Match)</span>
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleAction('eligibility', { eligibility: 'not_eligible' })}
-                >
-                  <X size={16} />
-                  <span>Mark Ineligible (Resume Search)</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {request.status === 'confirmed' && request.acceptedDonorId && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
-            <p>
-              📞 <strong>Coordinate Dispatch:</strong> Donor verified eligible! Please contact the donor and confirm details.
-            </p>
-            <div style={{ fontSize: '1rem', fontWeight: 600 }}>
-              Name: {request.acceptedDonorId.name} | Phone: {request.acceptedDonorId.phone}
-            </div>
-            <button className="btn btn-primary" onClick={() => handleAction('contact')}>
-              Confirm Contact & Donor Traveling
-            </button>
-          </div>
-        )}
-
-        {request.status === 'in_progress' && request.acceptedDonorId && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
-            <p>
-              💉 <strong>Donation In Progress:</strong> Donor is at the hospital. Once blood collection completes, click below to log the record.
-            </p>
-            <button className="btn btn-primary" onClick={() => handleAction('complete')}>
-              Log Donation Completed
-            </button>
+              );
+            })}
           </div>
         )}
 
         {request.status === 'completed' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
             <p>
-              🎉 <strong>Donation Completed:</strong> The blood has been collected successfully. Click below to download the official Certificate or close and archive this request.
+              🎉 <strong>Donation Completed:</strong> All blood collections finished. Click below to close and archive this request.
             </p>
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '12px' }}>
               <button className="btn btn-primary" onClick={() => handleAction('close')}>
                 Close & Archive Request
-              </button>
-              <button className="btn btn-secondary" onClick={() => handleDownloadCertificate(request._id)}>
-                <Download size={16} />
-                <span>Download Donation Certificate (PDF)</span>
               </button>
             </div>
           </div>
@@ -292,12 +315,6 @@ export const RequestTracking = () => {
               ✅ <strong>Archived:</strong> This request was closed on{' '}
               {request.closedAt ? new Date(request.closedAt).toLocaleDateString() : 'N/A'}.
             </p>
-            <div>
-              <button className="btn btn-primary btn-sm" onClick={() => handleDownloadCertificate(request._id)}>
-                <Download size={14} />
-                <span>Download Donation Certificate (PDF)</span>
-              </button>
-            </div>
           </div>
         )}
       </div>
