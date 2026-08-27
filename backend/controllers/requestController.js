@@ -232,14 +232,17 @@ exports.checkEligibility = async (req, res) => {
       m => m && m.donorId && (m.donorId._id || m.donorId).toString() === targetDonorId.toString()
     );
 
+    const donorUser = await User.findById(targetDonorId);
+    const donorName = donorUser ? donorUser.name : 'Donor';
+
     if (donorMatch) {
       donorMatch.eligibility = eligibility;
     }
 
-    const donorUser = await User.findById(targetDonorId);
-    const donorName = donorUser ? donorUser.name : 'Donor';
-
     if (eligibility === 'eligible') {
+      if (donorMatch) {
+        donorMatch.status = 'confirmed';
+      }
       request.status = 'confirmed';
       request.statusHistory.push({
         status: 'confirmed',
@@ -299,6 +302,13 @@ exports.confirmContact = async (req, res) => {
     const { donorId } = req.body;
     const targetDonorId = donorId || request.acceptedDonorId;
 
+    const donorMatch = request.matchedDonors.find(
+      m => m && m.donorId && (m.donorId._id || m.donorId).toString() === targetDonorId.toString()
+    );
+    if (donorMatch) {
+      donorMatch.status = 'in_progress';
+    }
+
     request.status = 'in_progress';
     request.statusHistory.push({
       status: 'in_progress',
@@ -336,10 +346,23 @@ exports.completeRequest = async (req, res) => {
     const { donorId } = req.body;
     const targetDonorId = donorId || request.acceptedDonorId;
 
-    request.status = 'completed';
+    const donorMatch = request.matchedDonors.find(
+      m => m && m.donorId && (m.donorId._id || m.donorId).toString() === targetDonorId.toString()
+    );
+    if (donorMatch) {
+      donorMatch.status = 'completed';
+    }
+
+    const acceptedMatches = request.matchedDonors.filter(m => m.response === 'accepted');
+    const allCompleted = acceptedMatches.length > 0 && acceptedMatches.every(m => m.status === 'completed');
+
+    if (allCompleted) {
+      request.status = 'completed';
+    }
+
     request.statusHistory.push({
       status: 'completed',
-      note: 'Blood donation completed successfully.'
+      note: 'Blood donation completed successfully for donor.'
     });
 
     await request.save();

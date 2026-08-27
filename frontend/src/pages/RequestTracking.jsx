@@ -218,9 +218,10 @@ export const RequestTracking = () => {
               const donorIdStr = donor?._id || donor;
               const isEligible = m.eligibility === 'eligible';
               const isPending = !m.eligibility || m.eligibility === 'pending';
+              const donorStatus = m.status || (isEligible ? 'confirmed' : 'accepted');
 
               return (
-                <div key={idx} className="card" style={{ padding: '16px', borderLeft: `5px solid ${isEligible ? 'var(--success)' : 'var(--primary)'}`, backgroundColor: '#fafafa' }}>
+                <div key={idx} className="card" style={{ padding: '16px', borderLeft: `5px solid ${donorStatus === 'completed' ? 'var(--success)' : isEligible ? '#3b82f6' : 'var(--primary)'}`, backgroundColor: '#fafafa' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                       <div style={{ backgroundColor: '#fee2e2', color: 'var(--primary)', padding: '10px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -237,18 +238,19 @@ export const RequestTracking = () => {
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span className={`badge badge-${isEligible ? 'confirmed' : m.eligibility === 'not_eligible' ? 'closed' : 'searching'}`} style={{ fontSize: '0.85rem', padding: '6px 12px' }}>
-                        Eligibility: {m.eligibility ? m.eligibility.toUpperCase() : 'PENDING'}
+                      <span className={`badge badge-${donorStatus === 'completed' ? 'completed' : isEligible ? 'confirmed' : m.eligibility === 'not_eligible' ? 'closed' : 'searching'}`} style={{ fontSize: '0.85rem', padding: '6px 12px' }}>
+                        {donorStatus === 'completed' ? 'DONATION COMPLETED' : `ELIGIBILITY: ${m.eligibility ? m.eligibility.toUpperCase() : 'PENDING'}`}
                       </span>
                     </div>
                   </div>
 
-                  {/* Specific Action Buttons per Donor */}
+                  {/* Independent Mutually Exclusive Process Steps per Donor */}
                   <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid #e5e7eb' }}>
+                    {/* Step 1: Clinical Verification (Pending Eligibility) */}
                     {isPending && (
                       <div>
                         <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
-                          🏥 <strong>Clinical Verification:</strong> Perform physical screening and verify eligibility for <strong>{donor?.name}</strong>.
+                          🏥 <strong>Step 1: Clinical Verification</strong> — Perform physical screening and verify eligibility for <strong>{donor?.name}</strong>.
                         </p>
                         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                           <button
@@ -271,10 +273,11 @@ export const RequestTracking = () => {
                       </div>
                     )}
 
-                    {isEligible && request.status !== 'in_progress' && request.status !== 'completed' && request.status !== 'closed' && (
+                    {/* Step 2: Contact & Dispatch (Eligible & Confirmed) */}
+                    {isEligible && (donorStatus === 'accepted' || donorStatus === 'confirmed') && (
                       <div>
                         <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
-                          📞 <strong>Contact & Dispatch:</strong> Contact <strong>{donor?.name}</strong> at <strong>{donor?.phone}</strong> to coordinate ETA and arrival.
+                          📞 <strong>Step 2: Contact & Dispatch</strong> — Contact <strong>{donor?.name}</strong> at <strong>{donor?.phone}</strong> to coordinate ETA and travel.
                         </p>
                         <button
                           className="btn btn-primary btn-sm"
@@ -287,10 +290,11 @@ export const RequestTracking = () => {
                       </div>
                     )}
 
-                    {(request.status === 'in_progress' || (isEligible && request.status === 'confirmed')) && (
+                    {/* Step 3: Donation Collection (In Progress) */}
+                    {isEligible && donorStatus === 'in_progress' && (
                       <div>
                         <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
-                          💉 <strong>Donation In Progress:</strong> Donor is verified. Collect blood and log completion when finished.
+                          💉 <strong>Step 3: Donation Collection</strong> — <strong>{donor?.name}</strong> is at hospital. Collect blood and log completion.
                         </p>
                         <button
                           className="btn btn-primary btn-sm"
@@ -303,10 +307,11 @@ export const RequestTracking = () => {
                       </div>
                     )}
 
-                    {(request.status === 'completed' || request.status === 'closed') && (
+                    {/* Step 4: Completed */}
+                    {donorStatus === 'completed' && (
                       <div style={{ fontSize: '0.875rem', color: 'var(--success)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <CheckCircle size={16} />
-                        <span>Donation Completed & Logged for {donor?.name}</span>
+                        <span>Step 4: Donation Finished & Logged for {donor?.name}</span>
                       </div>
                     )}
                   </div>

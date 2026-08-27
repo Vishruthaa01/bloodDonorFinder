@@ -12,6 +12,11 @@ const MatchedDonorSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'eligible', 'not_eligible'],
     default: 'pending'
+  },
+  status: {
+    type: String,
+    enum: ['accepted', 'confirmed', 'in_progress', 'completed'],
+    default: 'accepted'
   }
 }, { _id: false });
 
