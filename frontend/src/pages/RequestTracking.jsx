@@ -219,8 +219,8 @@ export const RequestTracking = () => {
               const isEligible = m.eligibility === 'eligible';
               const isPending = !m.eligibility || m.eligibility === 'pending';
               
-              const isStep4 = m.donationCompleted || m.status === 'completed';
-              const isStep3 = isEligible && !isStep4 && (m.contactConfirmed || m.status === 'in_progress');
+              const isStep4 = m.donationCompleted || m.status === 'completed' || request.status === 'completed' || request.status === 'closed';
+              const isStep3 = isEligible && !isStep4 && (m.contactConfirmed || m.status === 'in_progress' || request.status === 'in_progress');
               const isStep2 = isEligible && !isStep4 && !isStep3;
 
               return (
