@@ -269,6 +269,7 @@ exports.checkEligibility = async (req, res) => {
       });
     }
 
+    request.markModified('matchedDonors');
     await request.save();
 
     notifyService.notifyHospital(request.hospitalId.toString(), {
@@ -315,7 +316,14 @@ exports.confirmContact = async (req, res) => {
       note: 'Hospital has contacted the donor and coordinated ETA.'
     });
 
+    request.markModified('matchedDonors');
     await request.save();
+
+    notifyService.notifyHospital(request.hospitalId.toString(), {
+      type: 'REQUEST_UPDATED',
+      requestId: request._id,
+      status: request.status
+    });
 
     if (targetDonorId) {
       notifyService.notifyDonor(targetDonorId.toString(), {
@@ -365,7 +373,14 @@ exports.completeRequest = async (req, res) => {
       note: 'Blood donation completed successfully for donor.'
     });
 
+    request.markModified('matchedDonors');
     await request.save();
+
+    notifyService.notifyHospital(request.hospitalId.toString(), {
+      type: 'REQUEST_UPDATED',
+      requestId: request._id,
+      status: request.status
+    });
 
     if (targetDonorId) {
       await User.findByIdAndUpdate(targetDonorId, {
