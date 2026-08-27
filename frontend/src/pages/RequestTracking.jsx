@@ -206,47 +206,55 @@ export const RequestTracking = () => {
 
         {/* Separate Portal Cards for Accepted Donors */}
         {request.matchedDonors.filter(m => m.response === 'accepted').length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '16px' }}>
-            <h4 style={{ margin: 0, color: 'var(--primary)' }}>
-              Accepted Donors Confirmation Queue ({request.matchedDonors.filter(m => m.response === 'accepted').length} donor(s))
-            </h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h4 style={{ margin: 0, color: 'var(--primary)', fontSize: '1.1rem' }}>
+                Accepted Donors Confirmation Queue ({request.matchedDonors.filter(m => m.response === 'accepted').length} donor(s))
+              </h4>
+            </div>
 
             {request.matchedDonors.filter(m => m.response === 'accepted').map((m, idx) => {
               const donor = m.donorId;
               const donorIdStr = donor?._id || donor;
+              const isEligible = m.eligibility === 'eligible';
+              const isPending = !m.eligibility || m.eligibility === 'pending';
+
               return (
-                <div key={idx} className="card" style={{ backgroundColor: 'var(--secondary)', border: '1px solid var(--border-color)' }}>
+                <div key={idx} className="card" style={{ padding: '16px', borderLeft: `5px solid ${isEligible ? 'var(--success)' : 'var(--primary)'}`, backgroundColor: '#fafafa' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <div style={{ backgroundColor: 'var(--bg-card)', padding: '10px', borderRadius: '50%' }}>
-                        <User size={24} />
+                      <div style={{ backgroundColor: '#fee2e2', color: 'var(--primary)', padding: '10px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <User size={22} />
                       </div>
                       <div>
-                        <strong>{donor?.name || 'Accepted Donor'}</strong> has accepted 1 unit.
-                        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                          Blood Group: <strong>{donor?.bloodGroup || request.bloodGroup}</strong> | Phone: <strong>{donor?.phone || 'N/A'}</strong>
+                        <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                          {donor?.name || 'Accepted Donor'}
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                          Blood Group: <strong style={{ color: 'var(--primary)' }}>{donor?.bloodGroup || request.bloodGroup}</strong> | Phone: <strong>{donor?.phone || 'N/A'}</strong>
                         </div>
                       </div>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span className={`badge badge-${m.eligibility === 'eligible' ? 'confirmed' : m.eligibility === 'not_eligible' ? 'closed' : 'searching'}`}>
-                        Eligibility: {m.eligibility || 'pending'}
+                      <span className={`badge badge-${isEligible ? 'confirmed' : m.eligibility === 'not_eligible' ? 'closed' : 'searching'}`} style={{ fontSize: '0.85rem', padding: '6px 12px' }}>
+                        Eligibility: {m.eligibility ? m.eligibility.toUpperCase() : 'PENDING'}
                       </span>
                     </div>
                   </div>
 
-                  {/* Specific Action Buttons for this Donor */}
-                  <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
-                    {m.eligibility === 'pending' && (
+                  {/* Specific Action Buttons per Donor */}
+                  <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid #e5e7eb' }}>
+                    {isPending && (
                       <div>
-                        <p style={{ fontSize: '0.9rem', marginBottom: '8px' }}>
-                          🏥 <strong>Clinical Verification:</strong> Verify physical screening for <strong>{donor?.name}</strong>.
+                        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                          🏥 <strong>Clinical Verification:</strong> Perform physical screening and verify eligibility for <strong>{donor?.name}</strong>.
                         </p>
-                        <div style={{ display: 'flex', gap: '10px' }}>
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                           <button
                             className="btn btn-primary btn-sm"
                             onClick={() => handleAction('eligibility', { eligibility: 'eligible', donorId: donorIdStr })}
+                            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
                           >
                             <Check size={14} />
                             <span>Mark Eligible (Confirm {donor?.name})</span>
@@ -254,6 +262,7 @@ export const RequestTracking = () => {
                           <button
                             className="btn btn-danger btn-sm"
                             onClick={() => handleAction('eligibility', { eligibility: 'not_eligible', donorId: donorIdStr })}
+                            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
                           >
                             <X size={14} />
                             <span>Mark Ineligible</span>
@@ -262,31 +271,42 @@ export const RequestTracking = () => {
                       </div>
                     )}
 
-                    {m.eligibility === 'eligible' && request.status === 'confirmed' && (
+                    {isEligible && request.status !== 'in_progress' && request.status !== 'completed' && request.status !== 'closed' && (
                       <div>
-                        <p style={{ fontSize: '0.9rem', marginBottom: '8px' }}>
-                          📞 <strong>Contact & Dispatch:</strong> Contact <strong>{donor?.name}</strong> at <strong>{donor?.phone}</strong> to confirm ETA.
+                        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                          📞 <strong>Contact & Dispatch:</strong> Contact <strong>{donor?.name}</strong> at <strong>{donor?.phone}</strong> to coordinate ETA and arrival.
                         </p>
                         <button
                           className="btn btn-primary btn-sm"
                           onClick={() => handleAction('contact', { donorId: donorIdStr })}
+                          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
                         >
-                          Confirm Contact & {donor?.name} Traveling
+                          <Phone size={14} />
+                          <span>Confirm Contact & {donor?.name} Traveling</span>
                         </button>
                       </div>
                     )}
 
-                    {request.status === 'in_progress' && (
+                    {(request.status === 'in_progress' || (isEligible && request.status === 'confirmed')) && (
                       <div>
-                        <p style={{ fontSize: '0.9rem', marginBottom: '8px' }}>
-                          💉 <strong>Donation In Progress:</strong> Collect blood from <strong>{donor?.name}</strong>.
+                        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
+                          💉 <strong>Donation In Progress:</strong> Donor is verified. Collect blood and log completion when finished.
                         </p>
                         <button
                           className="btn btn-primary btn-sm"
                           onClick={() => handleAction('complete', { donorId: donorIdStr })}
+                          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
                         >
-                          Log Donation Completed for {donor?.name}
+                          <Check size={14} />
+                          <span>Log Donation Completed for {donor?.name}</span>
                         </button>
+                      </div>
+                    )}
+
+                    {(request.status === 'completed' || request.status === 'closed') && (
+                      <div style={{ fontSize: '0.875rem', color: 'var(--success)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <CheckCircle size={16} />
+                        <span>Donation Completed & Logged for {donor?.name}</span>
                       </div>
                     )}
                   </div>
