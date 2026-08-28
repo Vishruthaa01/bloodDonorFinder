@@ -218,24 +218,15 @@ const hospitalsToCreate = [
 ];
 
 const connect = async () => {
-  const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
-  const uris = [
-    mongoUri,
-    'mongodb://127.0.0.1:27017/bloodDonorFinder'
-  ];
-
-  for (const uri of uris) {
-    if (!uri) continue;
-    try {
-      console.log('Attempting to connect to:', uri.includes('mongodb+srv') ? 'MongoDB Atlas' : uri);
-      await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
-      console.log('Successfully connected!');
-      return;
-    } catch (err) {
-      console.log('Failed connection to', uri.includes('mongodb+srv') ? 'MongoDB Atlas' : uri, 'Error:', err.message);
-    }
+  const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/bloodDonorFinder';
+  try {
+    console.log('Connecting to MongoDB Compass (Local)...');
+    await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 5000 });
+    console.log('Successfully connected!');
+  } catch (err) {
+    console.error('Failed connection to MongoDB:', err.message);
+    throw err;
   }
-  throw new Error('All database connection attempts failed');
 };
 
 const seedDatabase = async () => {
