@@ -1,0 +1,1618 @@
+[{
+  "_id": {
+    "$oid": "6a8fd01331e4424a39d1b371"
+  },
+  "hospitalId": {
+    "$oid": "6a8fce404955ad4ec3b3b92f"
+  },
+  "bloodGroup": "O+",
+  "unitsNeeded": 1,
+  "urgency": "medium",
+  "radiusKm": 100,
+  "status": "searching",
+  "statusHistory": [
+    {
+      "status": "searching",
+      "note": "Blood request raised by hospital.",
+      "timestamp": {
+        "$date": "2026-08-27T05:50:11.488Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Aarav Sharma) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T05:50:11.504Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Aarav Sharma timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T05:50:56.512Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Ananya Reddy) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T05:50:56.539Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Ananya Reddy timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T05:51:41.554Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Arjun Deshmukh) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T05:51:41.604Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Arjun Deshmukh timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T05:52:26.619Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 20 km.",
+      "timestamp": {
+        "$date": "2026-08-27T05:52:26.633Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Kavya Joshi) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T05:52:26.657Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Kavya Joshi timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:11.666Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Diya Kulkarni) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:11.691Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Diya Kulkarni timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:56.697Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 30 km.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:56.714Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 40 km.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:56.738Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 50 km.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:56.761Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 60 km.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:56.782Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 70 km.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:56.807Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 80 km.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:56.828Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 90 km.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:56.851Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 100 km.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:56.881Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Matching engine: No compatible available donors found within 100 km maximum range.",
+      "timestamp": {
+        "$date": "2026-08-27T05:53:56.913Z"
+      }
+    }
+  ],
+  "matchedDonors": [
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b920"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T05:50:11.501Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b923"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T05:50:56.532Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92c"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T05:51:41.590Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b927"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T05:52:26.653Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92b"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T05:53:11.686Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-08-27T05:50:11.489Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:53:56.915Z"
+  },
+  "__v": 20
+},
+{
+  "_id": {
+    "$oid": "6a8fd10d31e4424a39d1b377"
+  },
+  "hospitalId": {
+    "$oid": "6a8fce404955ad4ec3b3b92f"
+  },
+  "bloodGroup": "O+",
+  "unitsNeeded": 1,
+  "urgency": "medium",
+  "radiusKm": 10,
+  "status": "closed",
+  "statusHistory": [
+    {
+      "status": "searching",
+      "note": "Blood request raised by hospital.",
+      "timestamp": {
+        "$date": "2026-08-27T05:54:21.482Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Aarav Sharma) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T05:54:21.501Z"
+      }
+    },
+    {
+      "status": "donor_found",
+      "note": "All 1 required donor(s) accepted (1 unit each). Total accepted: 1",
+      "timestamp": {
+        "$date": "2026-08-27T05:54:57.653Z"
+      }
+    },
+    {
+      "status": "confirmed",
+      "note": "Donor marked eligible after screening.",
+      "timestamp": {
+        "$date": "2026-08-27T05:55:09.861Z"
+      }
+    },
+    {
+      "status": "in_progress",
+      "note": "Hospital has contacted the donor and coordinated ETA.",
+      "timestamp": {
+        "$date": "2026-08-27T05:55:16.850Z"
+      }
+    },
+    {
+      "status": "completed",
+      "note": "Blood donation completed successfully.",
+      "timestamp": {
+        "$date": "2026-08-27T05:55:25.302Z"
+      }
+    },
+    {
+      "status": "closed",
+      "note": "Request closed.",
+      "timestamp": {
+        "$date": "2026-08-27T05:55:26.778Z"
+      }
+    }
+  ],
+  "matchedDonors": [
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b920"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T05:54:21.495Z"
+      },
+      "response": "accepted",
+      "eligibility": "eligible"
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-08-27T05:54:21.482Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:55:26.779Z"
+  },
+  "__v": 6,
+  "acceptedDonorId": {
+    "$oid": "6a8fce404955ad4ec3b3b920"
+  },
+  "closedAt": {
+    "$date": "2026-08-27T05:55:26.778Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fd23b31e4424a39d1b379"
+  },
+  "hospitalId": {
+    "$oid": "6a8fce404955ad4ec3b3b92f"
+  },
+  "bloodGroup": "O+",
+  "unitsNeeded": 1,
+  "urgency": "medium",
+  "radiusKm": 100,
+  "status": "searching",
+  "statusHistory": [
+    {
+      "status": "searching",
+      "note": "Blood request raised by hospital.",
+      "timestamp": {
+        "$date": "2026-08-27T05:59:23.825Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Ananya Reddy) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T05:59:23.845Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Ananya Reddy timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T06:00:08.866Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Arjun Deshmukh) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T06:00:08.913Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Arjun Deshmukh timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T06:00:53.931Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 20 km.",
+      "timestamp": {
+        "$date": "2026-08-27T06:00:53.945Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Kavya Joshi) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T06:00:53.970Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Kavya Joshi timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T06:01:38.984Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Diya Kulkarni) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T06:01:39.033Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Diya Kulkarni timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T06:02:24.051Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 30 km.",
+      "timestamp": {
+        "$date": "2026-08-27T06:02:24.069Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 40 km.",
+      "timestamp": {
+        "$date": "2026-08-27T06:02:24.108Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 50 km.",
+      "timestamp": {
+        "$date": "2026-08-27T06:02:24.140Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 60 km.",
+      "timestamp": {
+        "$date": "2026-08-27T06:02:24.168Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 70 km.",
+      "timestamp": {
+        "$date": "2026-08-27T06:02:24.194Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 80 km.",
+      "timestamp": {
+        "$date": "2026-08-27T06:02:24.214Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 90 km.",
+      "timestamp": {
+        "$date": "2026-08-27T06:02:24.248Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 100 km.",
+      "timestamp": {
+        "$date": "2026-08-27T06:02:24.279Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Matching engine: No compatible available donors found within 100 km maximum range.",
+      "timestamp": {
+        "$date": "2026-08-27T06:02:24.307Z"
+      }
+    }
+  ],
+  "matchedDonors": [
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b923"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T05:59:23.837Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92c"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T06:00:08.904Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b927"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T06:00:53.966Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92b"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T06:01:39.016Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-08-27T05:59:23.825Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T06:02:24.309Z"
+  },
+  "__v": 18
+},
+{
+  "_id": {
+    "$oid": "6a8fd3ab31e4424a39d1b37e"
+  },
+  "hospitalId": {
+    "$oid": "6a8fce404955ad4ec3b3b92f"
+  },
+  "bloodGroup": "O+",
+  "unitsNeeded": 1,
+  "urgency": "medium",
+  "radiusKm": 10,
+  "status": "closed",
+  "statusHistory": [
+    {
+      "status": "searching",
+      "note": "Blood request raised by hospital.",
+      "timestamp": {
+        "$date": "2026-08-27T06:05:31.726Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Ananya Reddy) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T06:05:31.747Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Ananya Reddy timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T06:06:16.753Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Arjun Deshmukh) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T06:06:16.769Z"
+      }
+    },
+    {
+      "status": "donor_found",
+      "note": "All 1 required donor(s) accepted (1 unit each). Total accepted: 1",
+      "timestamp": {
+        "$date": "2026-08-27T06:06:59.484Z"
+      }
+    },
+    {
+      "status": "confirmed",
+      "note": "Donor marked eligible after screening.",
+      "timestamp": {
+        "$date": "2026-08-27T06:07:04.816Z"
+      }
+    },
+    {
+      "status": "in_progress",
+      "note": "Hospital has contacted the donor and coordinated ETA.",
+      "timestamp": {
+        "$date": "2026-08-27T06:07:05.720Z"
+      }
+    },
+    {
+      "status": "completed",
+      "note": "Blood donation completed successfully.",
+      "timestamp": {
+        "$date": "2026-08-27T06:07:06.404Z"
+      }
+    },
+    {
+      "status": "closed",
+      "note": "Request closed.",
+      "timestamp": {
+        "$date": "2026-08-27T06:07:07.713Z"
+      }
+    }
+  ],
+  "matchedDonors": [
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b923"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T06:05:31.740Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92c"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T06:06:16.766Z"
+      },
+      "response": "accepted",
+      "eligibility": "eligible"
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-08-27T06:05:31.726Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T06:07:07.714Z"
+  },
+  "__v": 8,
+  "acceptedDonorId": {
+    "$oid": "6a8fce404955ad4ec3b3b92c"
+  },
+  "closedAt": {
+    "$date": "2026-08-27T06:07:07.713Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8ff10c31e4424a39d1b381"
+  },
+  "hospitalId": {
+    "$oid": "6a8fce404955ad4ec3b3b92f"
+  },
+  "bloodGroup": "AB+",
+  "unitsNeeded": 2,
+  "urgency": "medium",
+  "radiusKm": 10,
+  "status": "closed",
+  "statusHistory": [
+    {
+      "status": "searching",
+      "note": "Blood request raised by hospital.",
+      "timestamp": {
+        "$date": "2026-08-27T08:10:52.283Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 2 donor(s) (Priya Patel, Ananya Reddy) simultaneously for 2 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T08:10:52.318Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Priya Patel accepted 1 unit. 1 of 2 unit(s) fulfilled. Continuing search for remaining donors.",
+      "timestamp": {
+        "$date": "2026-08-27T08:11:25.218Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Ananya Reddy timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T08:11:37.322Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Rohan Verma) simultaneously for 2 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T08:11:37.347Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Rohan Verma timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-27T08:12:22.365Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Sneha Rao) simultaneously for 2 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-27T08:12:22.416Z"
+      }
+    },
+    {
+      "status": "confirmed",
+      "note": "Donor marked eligible after screening.",
+      "timestamp": {
+        "$date": "2026-08-27T08:12:55.074Z"
+      }
+    },
+    {
+      "status": "in_progress",
+      "note": "Hospital has contacted the donor and coordinated ETA.",
+      "timestamp": {
+        "$date": "2026-08-27T08:12:56.032Z"
+      }
+    },
+    {
+      "status": "completed",
+      "note": "Blood donation completed successfully.",
+      "timestamp": {
+        "$date": "2026-08-27T08:12:57.204Z"
+      }
+    },
+    {
+      "status": "closed",
+      "note": "Request closed.",
+      "timestamp": {
+        "$date": "2026-08-27T08:12:59.402Z"
+      }
+    },
+    {
+      "status": "donor_found",
+      "note": "All 2 required donor(s) accepted (1 unit each). Total accepted: 2",
+      "timestamp": {
+        "$date": "2026-08-27T08:14:14.747Z"
+      }
+    },
+    {
+      "status": "confirmed",
+      "note": "Donor marked eligible after screening.",
+      "timestamp": {
+        "$date": "2026-08-27T08:14:19.414Z"
+      }
+    },
+    {
+      "status": "confirmed",
+      "note": "Donor marked eligible after screening.",
+      "timestamp": {
+        "$date": "2026-08-27T08:14:23.438Z"
+      }
+    },
+    {
+      "status": "in_progress",
+      "note": "Hospital has contacted the donor and coordinated ETA.",
+      "timestamp": {
+        "$date": "2026-08-27T08:14:24.506Z"
+      }
+    },
+    {
+      "status": "completed",
+      "note": "Blood donation completed successfully.",
+      "timestamp": {
+        "$date": "2026-08-27T08:14:26.744Z"
+      }
+    },
+    {
+      "status": "confirmed",
+      "note": "Donor marked eligible after screening.",
+      "timestamp": {
+        "$date": "2026-08-27T08:14:28.744Z"
+      }
+    },
+    {
+      "status": "in_progress",
+      "note": "Hospital has contacted the donor and coordinated ETA.",
+      "timestamp": {
+        "$date": "2026-08-27T08:14:30.511Z"
+      }
+    },
+    {
+      "status": "completed",
+      "note": "Blood donation completed successfully.",
+      "timestamp": {
+        "$date": "2026-08-27T08:14:31.657Z"
+      }
+    },
+    {
+      "status": "closed",
+      "note": "Request closed.",
+      "timestamp": {
+        "$date": "2026-08-27T08:14:34.986Z"
+      }
+    }
+  ],
+  "matchedDonors": [
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b921"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T08:10:52.305Z"
+      },
+      "response": "accepted",
+      "eligibility": "eligible"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b923"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T08:10:52.312Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b922"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T08:11:37.343Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b925"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-27T08:12:22.408Z"
+      },
+      "response": "accepted",
+      "eligibility": "pending"
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-08-27T08:10:52.284Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T08:14:34.988Z"
+  },
+  "__v": 19,
+  "acceptedDonorId": {
+    "$oid": "6a8fce404955ad4ec3b3b921"
+  },
+  "closedAt": {
+    "$date": "2026-08-27T08:14:34.986Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a9114e531e4424a39d1b386"
+  },
+  "hospitalId": {
+    "$oid": "6a8fce404955ad4ec3b3b92f"
+  },
+  "bloodGroup": "O+",
+  "unitsNeeded": 1,
+  "urgency": "medium",
+  "radiusKm": 100,
+  "status": "searching",
+  "statusHistory": [
+    {
+      "status": "searching",
+      "note": "Blood request raised by hospital.",
+      "timestamp": {
+        "$date": "2026-08-28T04:56:05.404Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Ananya Reddy) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T04:56:05.442Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Ananya Reddy timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T04:56:50.463Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 20 km.",
+      "timestamp": {
+        "$date": "2026-08-28T04:56:50.476Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Kavya Joshi) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T04:56:50.492Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Kavya Joshi timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T04:57:35.503Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Diya Kulkarni) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T04:57:35.530Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Diya Kulkarni timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:20.541Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 30 km.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:20.555Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 40 km.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:20.570Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 50 km.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:20.581Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 60 km.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:20.596Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 70 km.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:20.611Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 80 km.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:20.624Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 90 km.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:20.641Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 100 km.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:20.667Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Matching engine: No compatible available donors found within 100 km maximum range.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:20.686Z"
+      }
+    }
+  ],
+  "matchedDonors": [
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b923"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T04:56:05.429Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b927"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T04:56:50.490Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92b"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T04:57:35.528Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-08-28T04:56:05.410Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-28T04:58:20.688Z"
+  },
+  "__v": 16
+},
+{
+  "_id": {
+    "$oid": "6a91155c31e4424a39d1b38a"
+  },
+  "hospitalId": {
+    "$oid": "6a8fce404955ad4ec3b3b92f"
+  },
+  "bloodGroup": "O+",
+  "unitsNeeded": 1,
+  "urgency": "medium",
+  "radiusKm": 100,
+  "status": "searching",
+  "statusHistory": [
+    {
+      "status": "searching",
+      "note": "Blood request raised by hospital.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:04.477Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Ananya Reddy) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:04.500Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Ananya Reddy timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:49.511Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 20 km.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:49.521Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Kavya Joshi) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T04:58:49.533Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Kavya Joshi timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T04:59:34.535Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Diya Kulkarni) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T04:59:34.549Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Diya Kulkarni timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T05:00:19.559Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 30 km.",
+      "timestamp": {
+        "$date": "2026-08-28T05:00:19.582Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 40 km.",
+      "timestamp": {
+        "$date": "2026-08-28T05:00:19.603Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 50 km.",
+      "timestamp": {
+        "$date": "2026-08-28T05:00:19.617Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 60 km.",
+      "timestamp": {
+        "$date": "2026-08-28T05:00:19.628Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 70 km.",
+      "timestamp": {
+        "$date": "2026-08-28T05:00:19.643Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 80 km.",
+      "timestamp": {
+        "$date": "2026-08-28T05:00:19.661Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 90 km.",
+      "timestamp": {
+        "$date": "2026-08-28T05:00:19.681Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 100 km.",
+      "timestamp": {
+        "$date": "2026-08-28T05:00:19.700Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Matching engine: No compatible available donors found within 100 km maximum range.",
+      "timestamp": {
+        "$date": "2026-08-28T05:00:19.720Z"
+      }
+    }
+  ],
+  "matchedDonors": [
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b923"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T04:58:04.494Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b927"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T04:58:49.531Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92b"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T04:59:34.547Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-08-28T04:58:04.478Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-28T05:00:19.722Z"
+  },
+  "__v": 16
+},
+{
+  "_id": {
+    "$oid": "6a9123f531e4424a39d1b38e"
+  },
+  "hospitalId": {
+    "$oid": "6a8fce404955ad4ec3b3b92f"
+  },
+  "bloodGroup": "O+",
+  "unitsNeeded": 1,
+  "urgency": "medium",
+  "radiusKm": 100,
+  "status": "searching",
+  "statusHistory": [
+    {
+      "status": "searching",
+      "note": "Blood request raised by hospital.",
+      "timestamp": {
+        "$date": "2026-08-28T06:00:21.274Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Ananya Reddy) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T06:00:21.296Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Ananya Reddy timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T06:01:06.308Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 20 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:01:06.330Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Kavya Joshi) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T06:01:06.379Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Kavya Joshi timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T06:01:51.395Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Diya Kulkarni) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T06:01:51.417Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Diya Kulkarni timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T06:02:36.425Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 30 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:02:36.442Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 40 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:02:36.467Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 50 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:02:36.497Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 60 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:02:36.526Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 70 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:02:36.549Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 80 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:02:36.584Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 90 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:02:36.608Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 100 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:02:36.634Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Matching engine: No compatible available donors found within 100 km maximum range.",
+      "timestamp": {
+        "$date": "2026-08-28T06:02:36.674Z"
+      }
+    }
+  ],
+  "matchedDonors": [
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b923"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T06:00:21.289Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b927"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T06:01:06.369Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92b"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T06:01:51.412Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-08-28T06:00:21.275Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-28T06:02:36.676Z"
+  },
+  "__v": 16
+},
+{
+  "_id": {
+    "$oid": "6a912bdd31e4424a39d1b392"
+  },
+  "hospitalId": {
+    "$oid": "6a8fce404955ad4ec3b3b92f"
+  },
+  "bloodGroup": "B+",
+  "unitsNeeded": 1,
+  "urgency": "medium",
+  "radiusKm": 100,
+  "status": "searching",
+  "statusHistory": [
+    {
+      "status": "searching",
+      "note": "Blood request raised by hospital.",
+      "timestamp": {
+        "$date": "2026-08-28T06:34:05.712Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Ananya Reddy) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T06:34:05.747Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Ananya Reddy timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T06:34:50.760Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Rohan Verma) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T06:34:50.787Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Rohan Verma timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T06:35:35.802Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 20 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:35:35.814Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Rahul Nair) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T06:35:35.831Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Rahul Nair timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T06:36:20.835Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Karan Malhotra) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T06:36:20.850Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Karan Malhotra timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T06:37:05.860Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Kavya Joshi) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T06:37:05.876Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Kavya Joshi timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T06:37:50.885Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Diya Kulkarni) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T06:37:50.900Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Diya Kulkarni timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T06:38:35.915Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Notified 1 donor(s) (Siddharth Mehta) simultaneously for 1 unit(s) requirement.",
+      "timestamp": {
+        "$date": "2026-08-28T06:38:35.929Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Donor Siddharth Mehta timed out. Resuming search for remaining units.",
+      "timestamp": {
+        "$date": "2026-08-28T06:39:20.945Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 30 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:39:20.960Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 40 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:39:20.976Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 50 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:39:20.990Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 60 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:39:21.005Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 70 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:39:21.023Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 80 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:39:21.040Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 90 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:39:21.058Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "No available compatible donors in initial radius. Expanding search radius to 100 km.",
+      "timestamp": {
+        "$date": "2026-08-28T06:39:21.077Z"
+      }
+    },
+    {
+      "status": "searching",
+      "note": "Matching engine: No compatible available donors found within 100 km maximum range.",
+      "timestamp": {
+        "$date": "2026-08-28T06:39:21.098Z"
+      }
+    }
+  ],
+  "matchedDonors": [
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b923"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T06:34:05.734Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b922"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T06:34:50.782Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b926"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T06:35:35.827Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92e"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T06:36:20.847Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b927"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T06:37:05.874Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92b"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T06:37:50.898Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    },
+    {
+      "donorId": {
+        "$oid": "6a8fce404955ad4ec3b3b92a"
+      },
+      "notifiedAt": {
+        "$date": "2026-08-28T06:38:35.927Z"
+      },
+      "response": "rejected",
+      "eligibility": "pending"
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-08-28T06:34:05.713Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-28T06:39:21.100Z"
+  },
+  "__v": 24
+}]

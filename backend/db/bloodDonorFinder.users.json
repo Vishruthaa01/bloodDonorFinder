@@ -1,0 +1,457 @@
+[{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b91f"
+  },
+  "name": "System Admin",
+  "phone": "9999999999",
+  "email": "admin@lifeshare.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "O+",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.5874,
+      11.276
+    ]
+  },
+  "isAvailable": true,
+  "age": 35,
+  "role": "admin",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.247Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.247Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b920"
+  },
+  "name": "Aarav Sharma",
+  "phone": "9876543210",
+  "email": "aarav.sharma@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "O+",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.5828,
+      11.2742
+    ]
+  },
+  "isAvailable": true,
+  "age": 28,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:55:25.306Z"
+  },
+  "lastDonationDate": {
+    "$date": "2026-08-27T05:55:25.306Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b921"
+  },
+  "name": "Priya Patel",
+  "phone": "9876543211",
+  "email": "priya.patel@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "A+",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.595,
+      11.285
+    ]
+  },
+  "isAvailable": true,
+  "age": 25,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T08:14:31.662Z"
+  },
+  "lastDonationDate": {
+    "$date": "2026-08-27T08:14:31.662Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b922"
+  },
+  "name": "Rohan Verma",
+  "phone": "9876543212",
+  "email": "rohan.verma@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "B+",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.565,
+      11.268
+    ]
+  },
+  "isAvailable": true,
+  "age": 32,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b923"
+  },
+  "name": "Ananya Reddy",
+  "phone": "9876543213",
+  "email": "ananya.reddy@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "O-",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.605,
+      11.271
+    ]
+  },
+  "isAvailable": true,
+  "age": 24,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T06:12:02.026Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b924"
+  },
+  "name": "Vikram Singh",
+  "phone": "9876543214",
+  "email": "vikram.singh@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "AB+",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.675,
+      11.315
+    ]
+  },
+  "isAvailable": true,
+  "age": 29,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b925"
+  },
+  "name": "Sneha Rao",
+  "phone": "9876543215",
+  "email": "sneha.rao@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "A-",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.65,
+      11.3
+    ]
+  },
+  "isAvailable": true,
+  "age": 27,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b926"
+  },
+  "name": "Rahul Nair",
+  "phone": "9876543216",
+  "email": "rahul.nair@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "B-",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.695,
+      11.328
+    ]
+  },
+  "isAvailable": true,
+  "age": 31,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T06:12:00.666Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b927"
+  },
+  "name": "Kavya Joshi",
+  "phone": "9876543217",
+  "email": "kavya.joshi@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "O+",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.718,
+      11.34
+    ]
+  },
+  "isAvailable": true,
+  "age": 26,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b928"
+  },
+  "name": "Aditya Gupta",
+  "phone": "9876543218",
+  "email": "aditya.gupta@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "AB-",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.726,
+      11.332
+    ]
+  },
+  "isAvailable": false,
+  "age": 34,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T06:12:03.071Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b929"
+  },
+  "name": "Meera Iyer",
+  "phone": "9876543219",
+  "email": "meera.iyer@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "A+",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.71,
+      11.32
+    ]
+  },
+  "isAvailable": true,
+  "age": 23,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b92a"
+  },
+  "name": "Siddharth Mehta",
+  "phone": "9876543220",
+  "email": "siddharth.mehta@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "B+",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.67,
+      11.41
+    ]
+  },
+  "isAvailable": true,
+  "age": 30,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b92b"
+  },
+  "name": "Diya Kulkarni",
+  "phone": "9876543221",
+  "email": "diya.kulkarni@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "O-",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.73,
+      11.315
+    ]
+  },
+  "isAvailable": true,
+  "age": 27,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b92c"
+  },
+  "name": "Arjun Deshmukh",
+  "phone": "9876543222",
+  "email": "arjun.deshmukh@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "O+",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.545,
+      11.225
+    ]
+  },
+  "isAvailable": true,
+  "age": 28,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T06:07:06.406Z"
+  },
+  "lastDonationDate": {
+    "$date": "2026-08-27T06:07:06.406Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b92d"
+  },
+  "name": "Neha Kapoor",
+  "phone": "9876543223",
+  "email": "neha.kapoor@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "A-",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.75,
+      11.305
+    ]
+  },
+  "isAvailable": false,
+  "age": 33,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T06:12:04.135Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b92e"
+  },
+  "name": "Karan Malhotra",
+  "phone": "9876543224",
+  "email": "karan.malhotra@example.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "bloodGroup": "B+",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.705,
+      11.31
+    ]
+  },
+  "isAvailable": true,
+  "age": 29,
+  "role": "donor",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.249Z"
+  }
+}]

@@ -1,0 +1,56 @@
+[{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b92f"
+  },
+  "name": "Government Hospital - Perundurai",
+  "regId": "GOV01",
+  "email": "gh@gmail.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "address": "Perundurai, Erode",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      77.587466,
+      11.276032
+    ]
+  },
+  "contactPerson": "Gov_Admin",
+  "phone": "4289653385",
+  "role": "hospital",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.255Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.255Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a8fce404955ad4ec3b3b930"
+  },
+  "name": "Dharan Hospital",
+  "regId": "DHARAN02",
+  "email": "dharanhospital@gmail.com",
+  "passwordHash": "$2b$10$ERJBXN8h/c2HaSJktRL3ue79l5PyJwYw.wPy0u89FwIaAlpC7kqJ.",
+  "address": "Salem",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      78.145247,
+      11.625033
+    ]
+  },
+  "contactPerson": "Dharan_Admin",
+  "phone": "4856320197",
+  "role": "hospital",
+  "verified": true,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-08-27T05:42:24.255Z"
+  },
+  "updatedAt": {
+    "$date": "2026-08-27T05:42:24.255Z"
+  }
+}]
