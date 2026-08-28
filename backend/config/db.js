@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const dns = require('dns');
 
-// Fix SRV DNS lookup issues on cloud hosting (Render)
+// Fix SRV DNS lookup issues on cloud hosting
 try {
   dns.setServers(['8.8.8.8', '8.8.4.4']);
 } catch (e) {
@@ -18,8 +18,8 @@ const connectDB = async () => {
   const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
 
   if (!mongoUri) {
-    console.error('CRITICAL: Neither MONGODB_URI nor MONGO_URI environment variable is set in Render!');
-    console.error('Please add MONGODB_URI in your Render service Environment tab.');
+    console.error('CRITICAL: Neither MONGODB_URI nor MONGO_URI environment variable is set!');
+    console.error('Please add MONGODB_URI in your environment variables.');
   } else {
     const maskedUri = mongoUri.replace(/\/\/(.*):(.*)@/, '//$1:****@');
     console.log(`Attempting connection to: ${maskedUri}`);

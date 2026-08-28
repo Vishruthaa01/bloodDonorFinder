@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
       try {
         data = JSON.parse(text);
       } catch (e) {
-        throw new Error(`Cannot connect to backend API (${res.status} ${res.statusText}). Please check VITE_API_URL in Vercel.`);
+        throw new Error(`Cannot connect to backend API (${res.status} ${res.statusText}). Please check VITE_API_URL.`);
       }
       if (!res.ok) throw new Error(data.message || 'Login failed');
 

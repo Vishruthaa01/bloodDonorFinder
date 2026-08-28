@@ -7,7 +7,11 @@ frontend/node_modules/
 .env
 .env.local
 .env.*.local
+.env.example
+*.env.example
+env.example
 backend/.env
+backend/.env.example
 frontend/.env
 
 # Build outputs
