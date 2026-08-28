@@ -31,7 +31,9 @@ export const SocketProvider = ({ children }) => {
       return;
     }
 
-    const socketUrl = 'http://127.0.0.1:5000';
+    const socketUrl =
+  import.meta.env.VITE_SOCKET_URL ||
+  'http://127.0.0.1:5000';
     const newSocket = io(socketUrl);
 
     newSocket.on('connect', () => {

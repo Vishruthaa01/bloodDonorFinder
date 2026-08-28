@@ -23,7 +23,7 @@ export const AdminLogin = () => {
       // Check if logged in user is admin
       const token = localStorage.getItem('token');
       // If role is not admin, logout and show error
-      fetch('http://127.0.0.1:5000/api/auth/profile', {
+    fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       .then(res => res.json())
